@@ -37,6 +37,15 @@ This is a solo-developed, in-progress project focused on building a sleek and in
 - Cross-Chain Dashboard – Aggregate insights across networks
 - Token search + alert system for emerging coin trends
 
+### 🧠 What I'm Learning
+- Advanced React UI development
+- State management and scroll performance optimization
+- Chart integrations for technical financial data
+- Designing user-first crypto tools from scratch
+
+### 📁 Project Status
+🟢 Ongoing Development – Frontend live, backend & AI integrations coming soon.
+
 ---
 
 ## 🚀 How to Run Locally
