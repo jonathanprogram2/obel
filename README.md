@@ -43,6 +43,8 @@ This is a solo-developed, in-progress project focused on building a sleek and in
 - Chart integrations for technical financial data
 - Designing user-first crypto tools from scratch
 
+---
+
 ### 📁 Project Status
 🟢 Ongoing Development – Frontend live, backend & AI integrations coming soon.
 
