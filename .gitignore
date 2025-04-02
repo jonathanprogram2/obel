@@ -1,0 +1,6 @@
+# Ignore Firebase private key
+serviceAccountKey.json
+
+# Ignore node_modules and compiled TypreScript files
+node_modules/
+dist/
