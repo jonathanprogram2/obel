@@ -1,4 +1,4 @@
-# 🧱 Obel – AI-Powered Web3 Content Intelligence Platform
+#  Obel – AI-Powered Web3 Content Intelligence Platform
 
 **Obel** is a futuristic Web3 platform designed to help users explore meme coins, track crypto trends, and analyze real-time market sentiment. Built with cutting-edge frontend tech and a focus on immersive design, Obel blends AI insights with blockchain data to create a new kind of research experience for the decentralized web.
 
@@ -16,15 +16,22 @@
 
 ## 📸 Screenshots
 
-| Home Page | Explore Page | Coin Intel |
+| Home Page | 
+![Image](https://github.com/user-attachments/assets/e7f9009c-ddc6-4540-b06b-549d0a2dcf49)
 
-![Uploading HomeObel.png…]()
+| Login page |
+![Image](https://github.com/user-attachments/assets/6a76533d-189f-42c2-b96f-8aa3f0fce642)
+
+| SignUp Page |
+![Image](https://github.com/user-attachments/assets/6aca98ce-5c6d-47c8-b948-24e11f2b825f)
+
+| Explore page |
+![Image](https://github.com/user-attachments/assets/223bcf18-7f44-4dfe-9ae8-447762d814a5)
+
+| Coin Intel Page |
+![Image](https://github.com/user-attachments/assets/97db8adc-db7b-458e-bb34-cd33740b9a1b)
 
 
-|----------|---------------|-------------|
-| ![Home](./public/screenshots/home.png) | ![Explore](./public/screenshots/explore.png) | ![CoinIntel](./public/screenshots/coinintel.png) |
-
-*(Replace these with actual screenshots from your project directory)*
 
 ---
 
@@ -42,8 +49,6 @@
 ## 🧠 Inspiration
 
 Obel was inspired by the need for cleaner, more visual tools in the crypto space. It aims to empower users with insight—not just data—through AI-powered coin research, elegant UI, and futuristic branding built around the symbolism of obelisks and pyramids: permanence, power, and clarity.
-
----
 
 ---
 
@@ -69,9 +74,9 @@ Feel free to fork, open issues, or suggest improvements.
 If you want to connect or chat about AI, Web3, or frontend development:
 
 **Jonathan Mirabal**  
-📧 [Your Email Here]  
+📧 jonathan.a.mirabal@gmail.com
 🔗 [LinkedIn](https://www.linkedin.com/in/jonathanmirabal/)  
-🌐 [Portfolio (Coming Soon)](https://your-portfolio-url.com)
+🌐 [Portfolio (Coming Soon)]
 
 ---
 
