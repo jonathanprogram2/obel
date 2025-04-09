@@ -73,7 +73,6 @@ Feel free to fork, open issues, or suggest improvements.
 
 If you want to connect or chat about AI, Web3, or frontend development:
 
-**Jonathan Mirabal**  
 📧 jonathan.a.mirabal@gmail.com
 🔗 [LinkedIn](https://www.linkedin.com/in/jonathanmirabal/)  
 🌐 [Portfolio (Coming Soon)]
