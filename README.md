@@ -31,6 +31,8 @@
 | Coin Intel Page |
 ![Image](https://github.com/user-attachments/assets/97db8adc-db7b-458e-bb34-cd33740b9a1b)
 
+**Video Link**
+https://youtu.be/UnfQlxKaa64
 
 
 ---
