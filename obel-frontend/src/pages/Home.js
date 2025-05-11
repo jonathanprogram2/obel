@@ -91,7 +91,6 @@ const Home = () => {
         
         <div className="relative z-10 flex flex-col items-center gap-4 mt-6">
           {/* Login Button - Centered */}
-          <Link to="/login">
             <motion.button
              variants={buttonVariants}
              whileHover="hover"
@@ -99,10 +98,8 @@ const Home = () => {
              className="mt-6 px-6 py-3 bg-black text-gold border border-yellow-500 rounded-lg shadow-lg hover:shadow-yellow-400">
               Login
             </motion.button>
-          </Link>
 
           {/* Sign Up Button - Top Right */}
-          <Link to="/signup"> 
             <motion.button
               variants={buttonVariants}
               whileHover="hover"
@@ -110,7 +107,6 @@ const Home = () => {
               className="px-4 py-2 bg-black text-gold border border-yellow-500 rounded-md shadow-lg hover:shadow-yellow-400">
               Sign Up
             </motion.button>
-          </Link>
         </div>
 
         {/* Modals */}

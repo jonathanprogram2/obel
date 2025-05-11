@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const SignupModal = ({ show, onClose }) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+
+    // Clear fields whenever the modal is closed
+    useEffect(() =>{
+        if (!show) {
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setMessage('');
+        }
+    }, [show]);
 
 
     const handleSignup = async (e) => {
@@ -15,14 +25,22 @@ const SignupModal = ({ show, onClose }) => {
                 headers: { 'Content-Type' : 'application/json' },
                 body: JSON.stringify({ username, email, password })
             });
+
             const data = await res.json();
+            console.log("📦 Server response:", data);
+
+
+
             if (res.ok) {
                 setMessage('✅ Signup successful!');
-                onClose();
+                setTimeout(() => {
+                    onClose();
+                }, 1000)   
             } else {
                 setMessage(`❌ ${data}`);
             }
         } catch (err) {
+            console.error("❌ Signup fetch error:", err);
             setMessage('❌ Error signing up.');
         }
     };
@@ -31,8 +49,10 @@ const SignupModal = ({ show, onClose }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-            <div className="bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-md text-white">
-                <h2 className="text-2xl font-bold mb-4">📝 Sign Up</h2>
+            <div className="bg-black border border-yellow-500 p-6 rounded-xl shadow-2xl w-full max-w-md text-white">
+                <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
+                <p className="text-sm text-yellow-400 mb-2">🔒 Your info is encrypted and secured.</p>
+
                 <form onSubmit={handleSignup} className="flex flex-col gap-4">
                     <input
                         type="text"
@@ -69,7 +89,7 @@ const SignupModal = ({ show, onClose }) => {
                 <button
                     type="button"
                     onClick={onClose}
-                    className="text-gray-400 text-sm hover:underline"
+                    className="text-gray-400 text-sm hover:underline mt-4"
                 >
                     Close
                 </button>
