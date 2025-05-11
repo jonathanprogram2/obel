@@ -1,58 +1,84 @@
-# 🧱 Obel – The AI-Powered Web3 Research Platform (Ongoing)
+#  Obel – AI-Powered Web3 Intelligence Platform
 
-**Obel** is a futuristic, AI-integrated platform built to analyze and curate crypto and meme coin insights. Designed to empower users with real-time trends, technical analysis, and social sentiment, Obel serves as a one-stop research tool for navigating the decentralized Web3 landscape.
-
-This is a solo-developed, in-progress project focused on building a sleek and intelligent frontend with plans to integrate backend, AI, and blockchain features.
+**Obel** is a futuristic Web3 platform designed to help users explore meme coins, track crypto trends, and analyze real-time market sentiment. Built with cutting-edge frontend tech and a focus on immersive design, Obel blends AI insights with blockchain data to create a new kind of research experience for the decentralized web.
 
 ---
 
-## 🔧 Tech Stack
+## 🚀 Features
 
-- **Frontend:** React, JavaScript, TailwindCSS, Chart.js
-- **UI/UX:** Orbitron & Genos Fonts, Animated Visuals, Neon/Glowing Themes
-- **Deployment:** Vercel (Planned)
-- **Backend (Planned):** Firebase Authentication, Firestore, Web3 APIs
-- **AI Features (Planned):** ObelGPT (AI Assistant), Predictive Charts, Whale Watch
-
----
-
-## 💡 Key Features (In Progress)
-
-### ✅ Explore Page
-- Infinite scroll content feed with filters
-- Animated post cards with hover effects
-- Dynamic glowing UI and ambient background visuals
-- Live charts for Price, Volume, and Token Distribution
-
-### ✅ CoinIntel.js
-- Displays token-specific insights including:
-  - Technical analysis charts
-  - Real-time social sentiment
-  - Trending memes and search volume
-- Research-focused view for each coin before investing
-
-### 🔮 Upcoming Features
-- ObelGPT – AI assistant for crypto analysis and trend prediction
-- Whale Watch – Detect large wallet movements in real time
-- Cross-Chain Dashboard – Aggregate insights across networks
-- Token search + alert system for emerging coin trends
-
-### 🧠 What I'm Learning
-- Advanced React UI development
-- State management and scroll performance optimization
-- Chart integrations for technical financial data
-- Designing user-first crypto tools from scratch
+- ⚡ **Animated, Futuristic UI** – Built with React, TailwindCSS, GSAP, and Framer Motion  
+- 🧠 **AI-Driven Coin Intel** – View mock insights, charts, trends, and social buzz for meme coins  
+- 🌐 **Explore Feed** – Scroll-based trending content cards with Like, Share, and Load More features  
+- 🔐 **Login & Signup System** – Smooth authentication flow with form validation and animations  
+- 🧭 **Web3 Wallet Integration (placeholder)** – Modular wallet modal for future blockchain connectivity
 
 ---
 
-### 📁 Project Status
-🟢 Ongoing Development – Frontend live, backend & AI integrations coming soon.
+## 📸 Screenshots
+
+| Home Page | 
+![Image](https://github.com/user-attachments/assets/e7f9009c-ddc6-4540-b06b-549d0a2dcf49)
+
+| Login page |
+![Image](https://github.com/user-attachments/assets/6a76533d-189f-42c2-b96f-8aa3f0fce642)
+
+| SignUp Page |
+![Image](https://github.com/user-attachments/assets/6aca98ce-5c6d-47c8-b948-24e11f2b825f)
+
+| Explore page |
+![Image](https://github.com/user-attachments/assets/223bcf18-7f44-4dfe-9ae8-447762d814a5)
+
+| Coin Intel Page |
+![Image](https://github.com/user-attachments/assets/97db8adc-db7b-458e-bb34-cd33740b9a1b)
+
+**Video Link**
+https://youtu.be/UnfQlxKaa64
+
 
 ---
 
-## 🚀 How to Run Locally
+## 🛠️ Built With
 
-```bash
-cd obel-frontend
-npm install
-npm start
+- React.js
+- TypeScript
+- TailwindCSS
+- CSS3
+
+---
+
+## 🧠 Inspiration
+
+Obel was inspired by the need for cleaner, more visual tools in the crypto space. It aims to empower users with insight—not just data—through AI-powered coin research, elegant UI, and futuristic branding built around the symbolism of obelisks and pyramids: permanence, power, and clarity.
+
+---
+
+## 📈 Future Plans
+
+- Connect real crypto APIs (e.g., CoinGecko, Moralis, Lens Protocol)
+- Add AI-driven recommendation engine
+- Enable full Web3 wallet functionality (MetaMask, etc.)
+- Create a social hub for users to discuss coins in real-time
+- Expand Coin Intel page with real charting libraries and NLP sentiment feeds
+
+---
+
+## 🙌 Contributing
+
+Obel is an ongoing solo project, but collaboration and feedback are always welcome!  
+Feel free to fork, open issues, or suggest improvements.
+
+---
+
+## 📫 Contact
+
+If you want to connect or chat about AI, Web3, or frontend development:
+
+📧 jonathan.a.mirabal@gmail.com
+🔗 [LinkedIn](https://www.linkedin.com/in/jonathanmirabal/)  
+🌐 Portfolio (https://jonathanmirabal.vercel.app/)
+
+---
+
+## ⭐️ Show Your Support
+
+If you like this project, consider giving it a ⭐️ on GitHub. Thanks!
