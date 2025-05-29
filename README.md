@@ -54,11 +54,7 @@ Obel was born from a desire to bring clarity, strategy, and design-forward think
 
 ## 📈 Future Plans
 
-- Connect real crypto APIs (e.g., CoinGecko, Moralis, Lens Protocol)
 - Add AI-driven recommendation engine
-- Enable full Web3 wallet functionality (MetaMask, etc.)
-- Create a social hub for users to discuss coins in real-time
-- Expand Coin Intel page with real charting libraries and NLP sentiment feeds
 
 ---
 
