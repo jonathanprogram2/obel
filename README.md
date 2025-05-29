@@ -1,16 +1,15 @@
-#  Obel – AI-Powered Web3 Intelligence Platform
+#  Obel | Long-Term Stock Investment Platform *(Ongoing)*
 
-**Obel** is a futuristic Web3 platform designed to help users explore meme coins, track crypto trends, and analyze real-time market sentiment. Built with cutting-edge frontend tech and a focus on immersive design, Obel blends AI insights with blockchain data to create a new kind of research experience for the decentralized web.
+**Obel** 
+
+is a futuristic stock investing dashboard that merges the long-term, pie-based strategy of **M1 Finance** with the deep research and analysis tools of **Morningstar**. Obel helps users build diversified portfolios, track performance over time, and visualize holdings with interactive charts. Features include dynamic allocation pie charts, performance tracking, real-time price data, and a personalized dashboard—all styled in a sleek, Obel-branded UI. Future updates will introduce AI portfolio optimization, dividend yield rankings, and risk management tools.
 
 ---
 
 ## 🚀 Features
 
 - ⚡ **Animated, Futuristic UI** – Built with React, TailwindCSS, GSAP, and Framer Motion  
-- 🧠 **AI-Driven Coin Intel** – View mock insights, charts, trends, and social buzz for meme coins  
-- 🌐 **Explore Feed** – Scroll-based trending content cards with Like, Share, and Load More features  
 - 🔐 **Login & Signup System** – Smooth authentication flow with form validation and animations  
-- 🧭 **Web3 Wallet Integration (placeholder)** – Modular wallet modal for future blockchain connectivity
 
 ---
 
@@ -48,7 +47,8 @@ https://youtu.be/UnfQlxKaa64
 
 ## 🧠 Inspiration
 
-Obel was inspired by the need for cleaner, more visual tools in the crypto space. It aims to empower users with insight—not just data—through AI-powered coin research, elegant UI, and futuristic branding built around the symbolism of obelisks and pyramids: permanence, power, and clarity.
+Obel was born from a desire to bring clarity, strategy, and design-forward thinking to long-term stock investing. Inspired by platforms like M1 Finance and Morningstar, it reimagines portfolio management through a more immersive and visually compelling experience. The name "Obel" draws from the symbolism of obelisks—representing strength, clarity, and permanence—mirroring the platform’s mission to help investors build lasting wealth with confidence and insight.
+
 
 ---
 
