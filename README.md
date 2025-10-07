@@ -1,6 +1,5 @@
-#  Obel | Long-Term Stock Investment Platform *(Ongoing)*
+#  Obel | Finance Portfolio*
 
-**Obel** is a futuristic stock investing dashboard that merges the long-term, pie-based strategy of **M1 Finance** with the deep research and analysis tools of **Morningstar**. Obel helps users build diversified portfolios, track performance over time, and visualize holdings with interactive charts. Features include dynamic allocation pie charts, performance tracking, real-time price data, and a personalized dashboard—all styled in a sleek, Obel-branded UI. Future updates will introduce AI portfolio optimization, dividend yield rankings, and risk management tools.
 
 ---
 
