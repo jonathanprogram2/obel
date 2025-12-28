@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from 'framer-motion';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import '../index.css';
-import "../styles.css";
-import LoginModal from "../components/LoginModal";
-import SignupModal from "../components/SignupModal";
 
 // Orbitron Font
 const orbitronStyle = {
@@ -29,20 +26,12 @@ const logoVariants = {
 };
 
 const Home = () => {
-    const [showLogin, setShowLogin] = useState(false);
-    const [showSignup, setShowSignup] = useState(false);
+  const navigate = useNavigate();
 
-    const handleLoginSubmit = (data) => {
-      console.log("Logging in with:", data);
-      // TODO: Add API Call for Login
-      setShowLogin(false);
-    };
-
-    const handleSignupSubmit = (data) => {
-      console.log("Signing up with:", data);
-      // TODO: Add API call for signup
-      setShowSignup(false);
-    };
+  const handleEnter = () => {
+    // demo mode: just send the user straight to the dasboard
+    navigate("/dashboard");
+  };
 
     return (
       <motion.div
@@ -65,7 +54,7 @@ const Home = () => {
         
         <div className="relative z-10">
           {/* Company Title */}
-          <h1 className="text-7xl font-extrabold text-white mb-4 drop-shadow-[0_0_20px_gold]">Obel</h1>
+          <h1 className="text-9xl font-extrabold text-white mb-4 drop-shadow-[0_0_20px_gold]">Obel</h1>
         </div>
 
         {/* Obel Logo */}
@@ -79,13 +68,14 @@ const Home = () => {
         />
         <div className="relative flex flex-col items-center">
          {/* Tagline */}
-         <h1 className="text-4xl font-bold mt-6 text-center text-white">
-           Discover and Curate the Best Web3 Content  
+         <h1 className="text-5xl font-bold mt-6 text-center text-white tracking-wider">
+           Your Digital Command Center
          </h1>
 
          {/* Call to Action */}
-         <p className="text-gray-200 mt-4 text-xl text-center">
-            Join Obel and explore the decentralized social media revolution.
+         <p className="text-gray-200 mt-4 text-xl text-center tracking-wider">
+            Stocks, news, weather, and productivity tools — unified into one powerful, 
+            modular workspace built for focus and control.
          </p>
         </div>
         
@@ -94,7 +84,7 @@ const Home = () => {
             <motion.button
              variants={buttonVariants}
              whileHover="hover"
-             onClick={() => setShowLogin(true)}
+             onClick={handleEnter}
              className="mt-6 px-6 py-3 bg-black text-gold border border-yellow-500 rounded-lg shadow-lg hover:shadow-yellow-400">
               Login
             </motion.button>
@@ -103,15 +93,11 @@ const Home = () => {
             <motion.button
               variants={buttonVariants}
               whileHover="hover"
-              onClick={() => setShowSignup(true)}
+              onClick={handleEnter}
               className="px-4 py-2 bg-black text-gold border border-yellow-500 rounded-md shadow-lg hover:shadow-yellow-400">
               Sign Up
             </motion.button>
         </div>
-
-        {/* Modals */}
-        <LoginModal show={showLogin} onClose={() => setShowLogin(false)} onSubmit={handleLoginSubmit} />
-        <SignupModal show={showSignup} onClose={() => setShowSignup(false)} onSubmit={handleSignupSubmit} />  
       </motion.div>
     );
 };

@@ -4,7 +4,15 @@ module.exports = {
         "./src/**/*.{html,js,jsx,ts,tsx}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                sans: ['"Manrope"', '"Nimbus Sans"', 'system-ui', 'sans-serif'],
+                // Explicit aliases
+                nimbus: ['"Nimbus Sans"', 'sans-serif'],
+                manrope: ['"Manrope"', 'system-ui', 'sans-serif'],
+                orbitron: ['"Orbitron"', 'sans-serif'],
+            },
+        },
     },
     plugins: [],
 };

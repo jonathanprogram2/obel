@@ -28,12 +28,12 @@ const LoginModal = ({ show, onClose }) => {
 
             const data = await res.json();
             if (res.ok) {
-                setMessage('✅ Login successful!');
+                setMessage('Login successful!');
                 localStorage.setItem('token', data.token);
                 setTimeout(() => {
                     onClose();
                     setMessage('');
-                    navigate('/explore');
+                    navigate('/dashboard');
                 }, 1500);
             } else {
                 setMessage(`❌ ${data}`);
@@ -50,7 +50,7 @@ const LoginModal = ({ show, onClose }) => {
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
             <div className="bg-black border border-yellow-500 p-6 rounded-xl shadow-2xl w-full max-w-md text-white">
                 <h2 className="text-2xl font-bold mb-4">Login</h2>
-                <p className="text-sm text-yellow-400 mb-2">🔒 Your info is encrypted and secured.</p>
+                <p className="text-sm font-sans text-yellow-400 mb-2">🔒 Your info is encrypted and secured.</p>
 
                 <form onSubmit={handleLogin} className="flex flex-col gap-3">
                     <input
@@ -58,7 +58,7 @@ const LoginModal = ({ show, onClose }) => {
                         placeholder="Username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="p-2 rounded-md text-black"
+                        className="p-2 font-sans rounded-md text-black"
                         required
                     />
                     <input
@@ -66,7 +66,7 @@ const LoginModal = ({ show, onClose }) => {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="p-2 rounded-md text-black"
+                        className="p-2 font-sans rounded-md text-black"
                         required
                     />
                     <button

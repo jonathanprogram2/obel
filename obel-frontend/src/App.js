@@ -1,22 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Explore from './pages/Explore';
+import DashboardRoutes from './pages/DashboardRoutes';
+import Dashboard from './pages/Dashboard';
+import Portfolio from './pages/Portfolio';
+import BudgetsPage from './pages/BudgetsPage';
+import NewsPage from './pages/NewsPage';
+import WorkspacePage from './pages/WorkspacePage';
+import StockDetailPage from './pages/StockDetailPage';
 import './index.css';
-import CoinIntel from "./pages/CoinIntel";
+
 
 const App = () => {
     return (
         <Router>
-            <div className="min-h-screen bg-black text-white">
-                <Navbar />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/explore" element={<Explore />} />
-                    <Route path="/coin-intel" element={<CoinIntel />} />
-                </Routes>
-            </div>
+            <Routes>
+                {/* Homepage */}
+                <Route path="/" element={<Home />} />
+
+                {/* Dashboard Layout */}
+                <Route path="/dashboard" element={<DashboardRoutes />}>
+                    <Route index element={<Dashboard />} />
+                    <Route path="portfolio" element={<Portfolio />} />
+                    <Route path="budgets" element={<BudgetsPage />} />
+                    <Route path="news" element={<NewsPage />} />
+                    <Route path="workspace" element={<WorkspacePage />} />           
+                </Route>
+
+                <Route path="/token/:symbol" element={<StockDetailPage />} />
+            </Routes> 
         </Router>
     );
 };
