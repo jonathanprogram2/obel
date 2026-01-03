@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaChartPie, FaHandHoldingUsd, FaNewspaper } from "react-icons/fa";
+import { Link, useLocation, useNavigate} from "react-router-dom";
+import { FaHome, FaChartPie, FaHandHoldingUsd, FaNewspaper, FaSignOutAlt } from "react-icons/fa";
 import obelLogo from "../assets/obellogo.png";
 
 const NewsIcon = () => (
@@ -44,6 +44,14 @@ const Sidebar = ({ username }) => {
 
     const isActive = (path) => location.pathname === path;
 
+    const navigate = useNavigate();
+
+    const handleSignOut = () => {
+        // Later: LocalStorage.removeItem("token");
+        // Later: clear user context, etc.
+        navigate("/");
+    };
+
     const navItemClass = (active) =>
         `nav-item flex items-center gap-3 px-5 py-3 rounded-lg transition-all duration-200 ease-out ${
             active ? "is-active" : ""
@@ -85,22 +93,27 @@ const Sidebar = ({ username }) => {
                         <WorkspaceIcon /> Workspace
                     </Link>
                 </nav>
+
+                <button
+                    onClick={handleSignOut}
+                    className="nav-item flex items-center gap-3 px-5 py-3 rounded-lg transition-all duration-200 ease-out text-left"
+                    style={{ marginTop: "90px", fontSize: "15px", color: "#D9BD1E" }}
+                >
+                    <FaSignOutAlt /> Sign Out
+                </button>
             </div>
 
             {/* Bottom : Obel logo */}
-            <Link 
-                to="/"
-                className="flex flex-col items-center mt-8 opacity-90 hover:opacity-100 transition cursor-pointer"
-            >
+            <div className="flex flex-col items-center mt-8 opacity-90">
                 <img 
                     src={obelLogo} 
                     alt="Obel Logo" 
-                    className="w-14 h-14 mb-2 hover:drop-shadow-[0_0_12px_rgba(250,204,21,0.65)] transition" 
+                    className="w-14 h-14 mb-2" 
                 />
                 <p className="text-[0.65rem] uppercase tracking-[0.28em] text-[#E4E6E7]/70">
                     OBEL
                 </p>
-            </Link>
+            </div>
         </div>
     );   
 };

@@ -608,11 +608,11 @@ const BudgetsPage = () => {
             {/* what is this page? modal */}
             {showPageHelp && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-3 md:px-4"
                     onClick={() => setShowPageHelp(false)}
                 >
                     <div
-                        className="w-full max-w-3xl rounded-3xl border border-yellow-500/70 bg-gradient-to-br from-black via-[#080812] to-black p-6 md:p-8 shadow-[0_0_55px_rgba(234,179,8,0.7)] relative"
+                        className="w-[92vw] max-w-3xl rounded-3xl border border-yellow-500/70 bg-gradient-to-br from-black via-[#080812] to-black p-6 md:p-8 shadow-[0_0_55px_rgba(234,179,8,0.7)] relative max-h-[82vh] overflow-y-auto"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
@@ -630,7 +630,7 @@ const BudgetsPage = () => {
                         </div>
 
                         {/* Body copy */}
-                        <div className="space-y-5 text-sm md:text-base leading-relaxed text-gray-100">
+                        <div className="space-y-4 md:space-y-5 text-sm md:text-base leading-relaxed text-gray-100">
                             <p>
                                 This screen is your{" "}
                                 <span className="text-yellow-300 font-semibold">
@@ -670,7 +670,7 @@ const BudgetsPage = () => {
                             </div>
 
                             {/* Donut chart + arrow icon row */}
-                            <div className="grid gap-4 md:grid-cols-2">
+                            <div className="grid gap-3 md:grid-cols-2">
                                 {/* Donut / allocation */}
                                 <div>
                                     <h3 className="text-xs md:text-sm uppercase tracking-[0.16em] text-yellow-300 mb-2">

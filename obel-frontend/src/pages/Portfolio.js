@@ -361,16 +361,16 @@ const Portfolio = () => {
                     onClick={() => setShowPortfolioHelp(false)}
                 >
                     <div
-                        className="w-full max-w-3xl rounded-3xl border border-yellow-500/60 bg-[#050509] px-6 py-6 md:px-8 md:py-8 shadow-[0_0_45px_rgba(234,179,8,0.6)] relative"
+                        className="w-[92vw] max-w-3xl rounded-3xl border border-yellow-500/60 bg-[#050509] px-4 py-4 md:px-8 md:py-8 shadow-[0_0_45px_rgba(234,179,8,0.6)] relative max-h-[70vh] overflow-y-auto"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
                         <div className="flex items-start justify-between mb-4 gap-4">
                             <div>
-                                <p className="text-[0.7rem] uppercase tracking-[0.22em] text-yellow-400/90 mb-1">
+                                <p className="text-[0.75rem] md:text-[0.7rem] uppercase tracking-[0.22em] text-yellow-400/90 mb-1">
                                     Portfolio • Overview
                                 </p>
-                                <h2 className="text-xs md:text-2xl font-orbitron font-semibold text-yellow-100">
+                                <h2 className="text-base md:text-2xl font-orbitron font-semibold text-yellow-100">
                                     How this portfolio page works
                                 </h2>
                             </div>
@@ -682,8 +682,10 @@ const Portfolio = () => {
                     </div>
                 </motion.div>
             </div>
-
-            <GrowthVsContributionsChart/>
+            
+            <div className="portfolioGrowthCard">
+                <GrowthVsContributionsChart/>
+            </div>
 
             {/* Simple "Record contribution card" */}
             <motion.div

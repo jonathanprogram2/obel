@@ -1263,3 +1263,281 @@ body {
 .dayName{ font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px;}
 .dayTemp{ font-size: 17px; font-weight: 800; color: rgba(255,255,255,0.92); margin-top: 6px; line-height: 1; }
 .dayIcon{ font-size: 27px; margin-top: 10px; line-height: 1;}
+
+/* =================== MOBILE RESPONSIVENESS =================================================*/
+
+@media (max-width: 768px) {
+  .obel-mobile-offset {
+    padding-top: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .weatherModalPanel{
+    height: 82vh;
+    overflow: hidden;
+  }
+
+  .weatherModalGrid{
+    height: calc(80vh - 58px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .weatherModalPanel * {
+    scrollbar-width: auto;
+  }
+
+  .weatherModalPanel *::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.22);
+    border-radius: 999px;
+  }
+
+  .weatherModalPanel *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .weatherTopLeft,
+  .weatherTopRight,
+  .weatherBottomLeft,
+  .weatherBottomRight{
+    overflow: visible;
+    max-height: none;
+    min-height: unset;
+    height: auto;
+  }
+
+  .weatherTopLeft { min-height: 380px;}
+  .weatherTopRight { min-height: 260px; max-height: none;}
+  .weatherBottomLeft { min-height: 260px;}
+  .weatherBottomRight {min-height: 260px;}
+
+  .todayAndDays{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .daysRow{
+    display: grid !important;
+    gap: 8px !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
+  }
+
+  .dayCard{
+    min-width: 0 !important;
+    min-height: 96px;
+    padding: 10px 6px;
+    border-radius: 14px;
+  }
+
+  .daysTitle{
+    margin-top: 2px;
+  }
+
+  .mapWideBtn{
+    font-size: 8px;
+    margin-top: -9px;
+  }
+
+  .weatherTopRight{
+    max-height: 240px;
+    overflow: hidden;
+  }
+
+  .todayCard{
+    padding: 12px;
+    min-height: 140px;
+  }
+
+  .todayTemp{
+    font-size: 44px;
+    margin-left: 105px;
+  }
+
+  .todayEmoji{
+    font-size: 44px;
+    margin-top: 8px;
+    margin-left: 118px;
+  }
+
+  .todayCity{
+    margin-left: 117px;
+  }
+
+
+  .rainGrid{
+    grid-template-columns: 70px 1fr;
+    gap: 10px;
+  }
+
+  .todayMeta{
+    margin-left: 125px;
+  }
+
+  .rainBarWrap{
+    height: 130px;
+  }
+
+  .rainBars{
+    gap: 14px;
+    padding: 8px 10px 14px;
+  }
+
+  .citiesBox{
+    height: auto !important;
+    padding: 10px;
+    border-radius: 18px;
+  }
+
+  .citiesTop{
+    margin-bottom: 10px;
+  }
+
+  .cityRow{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+
+    min-height: 59px;
+    height: 59px;
+    overflow: hidden;
+  }
+
+  .citiesList{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .citiesTitle{
+    font-size: 15px;
+  }
+
+  .cityCountry{
+    font-size: 11px;
+    margin: 0;
+    line-height: 1.05;
+    color: rgba(255,255,255,.45);
+  }
+
+  .cityLeft{
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  .cityRight{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .cityDesc{
+    font-size: 11px;
+    line-height: 1.1;
+    color: rgba(255,255,255,.55);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  .cityIcon{
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .cityName{
+    font-size: 15px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: rgba(255,255,255,.92);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cityTemp{
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .mapBox{
+    height: 260px;
+    border-radius: 18px;
+  }
+
+  .mapControls{
+    margin-right: -20px;
+    margin-top: -35px;
+  }
+
+  .calendarModalPanel {
+    width: 92vw !important;
+    max-width: 380px !important;
+    margin: 0 auto !important;
+    padding: 14px;
+  }
+
+  .growthChartCard{
+    max-width: 360px;
+    width: 92vw;
+    margin: 12px auto 0;
+    margin-top: 15px !important;
+    margin-right: 10px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .growthChartCard .px-5{
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .growthChartCard .pt-4{
+    padding-top: 12px !important;
+  }
+
+  .growthChartCard .pb-3{
+    padding-bottom: 10px !important;
+  }
+
+  .growthChartArea{
+    height: 300px !important;
+    width: 400px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .growthChartCard{
+    max-width: 360px;
+    width: 94vw;
+  }
+
+  .growthChartArea{
+    height: 340px;
+  }
+}
+
+.growthChartCard{
+    overflow: hidden;
+  }
+
+.growthChartArea{
+    width: 100%;
+    height: 520px;
+  }

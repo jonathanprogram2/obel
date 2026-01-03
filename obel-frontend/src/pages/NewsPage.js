@@ -400,11 +400,11 @@ const NewsPage = () => {
             {/* NEW: "What is this page?" modal */}
             {showNewsHelp && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-3 md:px-4"
                     onClick={() => setShowNewsHelp(false)}
                 >
                     <div 
-                        className="max-w-3xl w-full rounded-2xl border border-yellow-500/60 bg-[#050509] p-8 shadow-[0_0_40px_rgba(234,179,8,0.55)] relative"
+                        className="w-[92vw] max-w-3xl rounded-2xl border border-yellow-500/60 bg-[#050509] p-8 shadow-[0_0_40px_rgba(234,179,8,0.55)] relative max-h-[82vh] overflow-y-auto"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between mb-4">
@@ -420,7 +420,7 @@ const NewsPage = () => {
                             </button>
                         </div>
 
-                        <div className="space-y-4 text-sm leading-relaxed text-gray-200">
+                        <div className="space-y-3 md:space-y-4 text-[0.82rem] md:text-sm leading-relaxed text-gray-200">
                             <section>
                                 <h3 className="text-xs font-orbitron tracking-[0.18em] uppercase text-yellow-300 mb-1">
                                     1. Category pills
@@ -485,7 +485,7 @@ const NewsPage = () => {
                             </p> 
                         </div>
 
-                        <div className="mt-5 flex justify-end">
+                        <div className="mt-4 flex justify-end">
                             <button
                                 type="button"
                                 onClick={() => setShowNewsHelp(false)}

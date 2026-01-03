@@ -743,48 +743,50 @@ const Dashboard = () => {
     );
 
     const renderCalendarView = () => (
-        <section className="content">
-            <div className="left-content">
-                <h1>Calendar planner</h1>
-                <div className="mt-4 rounded-2xl border border-slate-500/80 bg-black/60 p-4">
-                    <MiniCalendar large />
-                </div>
-            </div>
-            <div className="right-contetn">
-                <div className="recommended-songs">
-                    <h1>Today's events</h1>
-                    <div className="song-container">
-                        {mockEvents.map((ev) => (
-                            <div key={ev.id} className="song">
-                                <div
-                                    className="song-img"
-                                    style={{
-                                        backgroundColor: ev.color,
-                                        borderRadius: 8,
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        fontSize: "1.3rem",
-                                    }}
-                                >
-                                    📌
-                                </div>
-                                <div className="song-title">
-                                    <h2>{ev.title}</h2>
-                                    <p>{ev.type}</p>
-                                </div>
-                                <span>{ev.time}</span>
-                            </div>
-                        ))}
+        <div className="calendarModalPanel">
+            <section className="content">
+                <div className="left-content">
+                    <h1>Calendar planner</h1>
+                    <div className="mt-4 rounded-2xl border border-slate-500/80 bg-black/60 p-4">
+                        <MiniCalendar large />
                     </div>
                 </div>
-                <div className="music-player">
-                    <p className="text-xs text-center text-gray-100">
-                        Future: open event detail panel here
-                    </p>
+                <div className="right-contetn">
+                    <div className="recommended-songs">
+                        <h1>Today's events</h1>
+                        <div className="song-container">
+                            {mockEvents.map((ev) => (
+                                <div key={ev.id} className="song">
+                                    <div
+                                        className="song-img"
+                                        style={{
+                                            backgroundColor: ev.color,
+                                            borderRadius: 8,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: "1.3rem",
+                                        }}
+                                    >
+                                        📌
+                                    </div>
+                                    <div className="song-title">
+                                        <h2>{ev.title}</h2>
+                                        <p>{ev.type}</p>
+                                    </div>
+                                    <span>{ev.time}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="music-player">
+                        <p className="text-xs text-center text-gray-100">
+                            Future: open event detail panel here
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     );
 
     return (
@@ -1348,7 +1350,7 @@ const Dashboard = () => {
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.35, ease: "easeOut" }}
-                        className="relative z-50 w-full max-w-4xl mx-auto rounded-3xl border border-yellow-500/40 bg-[#050509] p-5 md:p-6 shadow-[0_0_40px_rgba(234,179,8,0.55)] max-h-[80vh] overflow-y-auto"
+                        className="calendarModalPanel relative z-50 w-full max-w-4xl mx-auto rounded-3xl border border-yellow-500/40 bg-[#050509] p-5 md:p-6 shadow-[0_0_40px_rgba(234,179,8,0.55)] max-h-[80vh] overflow-y-auto"
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div>

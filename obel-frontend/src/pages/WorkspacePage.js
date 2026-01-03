@@ -599,7 +599,7 @@ const WorkspacePage = () => {
         <div className="min-h-screen bg-[#04060a] text-white flex">
             {/* Left side: Obel sidebar is already in your app; this page assumes it's outside this component */}
 
-            <div className="flex-1 max-w-8xl mx-auto pt-12 pb-10 px-6 lg:px-10 flex gap-6 items-start">
+            <div className="flex-1 max-w-8xl mx-auto pt-16 sm:pt-14 lg:pt-12 pb-10 px-4 sm:px-6 lg:px-10 flex flex-col lg:flex-row gap-6 items-stretch lg:items-start overflow-x-hidden">
                 {/* Main content: title + board */}
                 <div className="flex-1 flex flex-col gap-4">
                     {/* Header */}
@@ -635,7 +635,15 @@ const WorkspacePage = () => {
                             + New Task
                         </button>
                     </div>
-           
+
+                    {/* Mobile quick-glance label */}
+                    <div className="md:hidden flex justify-center mb-3">
+                        <span className="text-[11px] uppercase tracking-[0.22em] text-yellow-300/90 animate-pulse drop-shadow-[0_0_12px_rgba(234,179,8,0.55)]">
+                            Quick mobile view glance of your kanban board
+                        </span>
+                    </div>
+
+
                     {/* Kanban board*/}
                     <motion.div
                         initial={{ opacity: 0, y: 14 }}
@@ -793,7 +801,7 @@ const WorkspacePage = () => {
                 initial={{ opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.35, delay: 0.05 }}
-                className="obel-ai-panel hidden lg:flex flex-col"
+                className="obel-ai-panel !hidden lg:!flex flex-col"
             >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-3">
@@ -887,7 +895,7 @@ const WorkspacePage = () => {
                     onClick={() => setShowHelp(false)}
                 >
                     <div
-                        className="max-w-3xl w-full rounded-2xl border border-yellow-500/60 bg-[#050509] p-9 shadow-[0_0_40px_rgba(234,179,8,0.55)] relative"
+                        className="w-full max-w-md sm:max-w-2xl lg:max-w-3xl rounded-2xl border border-yellow-500/60 bg-[#050509] p-5 sm:p-8 shadow-[0_0_40px_rgba(234,179,8,0.55)] relative max-h-[80vh] overflow-y-auto"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between mb-5">

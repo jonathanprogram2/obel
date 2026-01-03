@@ -1082,5 +1082,17 @@ h1 {
     color: rgba(255,255,255,0.75);
 }
 
+@media (max-width: 768px) {
+    .obel-music-shell {
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 96px;
+        min-height: 100vh;
+    }
 
+    .obel-main {
+        margin-top: 0;
+    }
+
+}
 

@@ -264,7 +264,7 @@ const GrowthVsContributionsChart = () => {
     }, []);
 
     return (
-        <div className="rounded-2xl border border-yellow-500/40 bg-[#050509] mt-8 shadow-lg">
+        <div className="growthChartCard rounded-2xl border border-yellow-500/40 bg-[#050509] mt-8 shadow-lg">
             {/* Header + subtitle + help link */}
             <div className="flex items-start justify-between px-5 pt-4 pb-3 border-b border-yellow-500/20">
                 <div>
@@ -309,7 +309,7 @@ const GrowthVsContributionsChart = () => {
             <div
                 id="growth-contrib-chart"
                 ref={containerRef}
-                className="rounded-2xl border border-yellow-500/40 bg-[#050509] mt-8 shadow-lg"
+                className="growthChartArea"
             />
         </div>
     );
