@@ -179,7 +179,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchWeather = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/weather/today");
+                const res = await fetch("api/weather/today");
                 const data = await res.json();
 
                 if (!res.ok) {
@@ -280,7 +280,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchQuote = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/quotes/random");
+                const res = await fetch("api/quotes/random");
                 const data = await res.json();
 
                 if (!res.ok) throw new Error(data?.error || "Quote request failed");
