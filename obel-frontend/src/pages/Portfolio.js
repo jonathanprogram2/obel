@@ -56,6 +56,13 @@ const Portfolio = () => {
         new Date().toISOString().slice(0, 10)
     );
 
+    // Use same-origin in production (Vercel), localhost in dev via env var
+    const API_BASE =
+        import.meta?.env?.VITE_API_BASE_URL ||
+        process.env.REACT_APP_API_BASE_URL ||
+        "";
+
+
 
     // ----- Load holdings from local storage on first mount -----
     useEffect(() => {
@@ -121,10 +128,7 @@ const Portfolio = () => {
             setError("");
 
             try {
-                const res = await fetch(
-                    `http://localhost:5000/api/stocks/watchlist?symbols=${encodeURIComponent(
-                        symbols
-                    )}`
+                const res = await fetch(`${API_BASE}/api/stocks/watchlist?symbols=${encodeURIComponent(symbols)}`
                 );
                 if (!res.ok) {
                     throw new Error(`HTTP ${res.status}`);
@@ -153,7 +157,7 @@ const Portfolio = () => {
 
             if (!toFetch.length) return;
 
-            const baseUrl = "http://localhost:5000";
+            const baseUrl = API_BASE || "";
             const results = await Promise.all(
                 toFetch.map(async (sym) => {
                     try {
