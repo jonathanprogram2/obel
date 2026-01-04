@@ -182,7 +182,7 @@ const Portfolio = () => {
         };
 
         fetchDetails();
-    }, [owned, detailsBySymbol]);
+    }, [owned, detailsBySymbol, API_BASE]);
 
     // map holdings + quotes together
     const rows = useMemo(() => {
