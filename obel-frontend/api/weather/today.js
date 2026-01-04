@@ -65,8 +65,6 @@ module.exports = async (req, res) => {
       humidity: c.relativehumidity_2m ?? null,
       pressureMb: c.pressure_msl ?? null,
       windSpeed: c.windspeed_10m ?? null,
-      sunrise: data.daily?.sunrise?.[0] ?? null,
-      sunset: data.daily?.sunset?.[0] ?? null,
       summary: condition,
       condition,
       iconCode,

@@ -1,29 +1,24 @@
-// obel-frontend/api/quotes/random.js
+// Uses a provider, then falls back to local quotes if provider is down.
 
 module.exports = async (req, res) => {
+  const fallback = [
+    { text: "Discipline beats motivation when motivation disappears.", author: "BoBo" },
+    { text: "Small steps, daily — that’s the cheat code.", author: "BoBo" },
+    { text: "Do the work, then let the work do the talking.", author: "BoBo" },
+  ];
+
   try {
-    // Try Quotable first
-    const r = await fetch("https://api.quotable.io/random");
-    if (r.ok) {
-      const data = await r.json();
-      return res.status(200).json({
-        text: data.content,
-        author: data.author,
-      });
+    // ZenQuotes (no key, but sometimes flaky) — fallback handles it
+    const r = await fetch("https://zenquotes.io/api/random", { headers: { "User-Agent": "obel-app" } });
+    const data = await r.json();
+
+    if (r.ok && Array.isArray(data) && data[0]?.q) {
+      return res.json({ text: data[0].q, author: data[0].a || "" });
     }
 
-    // Fallback list (so the widget NEVER breaks)
-    const fallback = [
-      { text: "Discipline is doing what you said you’d do, long after the mood left.", author: "Unknown" },
-      { text: "Small steps daily become massive results.", author: "Unknown" },
-      { text: "Focus on systems. Results will follow.", author: "Unknown" },
-      { text: "Make future-you proud.", author: "Unknown" },
-    ];
-
+    throw new Error("Provider format unexpected");
+  } catch (e) {
     const pick = fallback[Math.floor(Math.random() * fallback.length)];
     return res.status(200).json(pick);
-  } catch (err) {
-    console.error("Quote API error:", err);
-    return res.status(500).json({ error: "Quote unavailable" });
   }
 };
