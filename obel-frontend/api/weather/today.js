@@ -1,59 +1,78 @@
-// obel-frontend/api/weather/today.js
+// Vercel Serverless Function: GET /api/weather/today
+// No API key required (Open-Meteo)
 
 module.exports = async (req, res) => {
   try {
-    const API_KEY = process.env.OPENWEATHER_API_KEY;
-    if (!API_KEY) {
-      return res.status(500).json({ error: "Missing OPENWEATHER_API_KEY" });
-    }
+    const CLEVELAND_LAT = 41.4993;
+    const CLEVELAND_LON = -81.6944;
 
-    const city = (req.query.city || "Cleveland").toString();
-    const url =
-      "https://api.openweathermap.org/data/2.5/weather" +
-      `?q=${encodeURIComponent(city)}` +
-      `&appid=${encodeURIComponent(API_KEY)}` +
-      `&units=imperial`;
+    const WEATHER_CODE_MAP = {
+      0: { condition: "Clear sky", iconCode: "01d" },
+      1: { condition: "Mainly clear", iconCode: "02d" },
+      2: { condition: "Partly cloudy", iconCode: "03d" },
+      3: { condition: "Overcast", iconCode: "04d" },
+      45: { condition: "Fog", iconCode: "50d" },
+      48: { condition: "Freezing fog", iconCode: "50d" },
+      51: { condition: "Light drizzle", iconCode: "09d" },
+      53: { condition: "Moderate drizzle", iconCode: "09d" },
+      55: { condition: "Dense drizzle", iconCode: "09d" },
+      61: { condition: "Slight rain", iconCode: "10d" },
+      63: { condition: "Moderate rain", iconCode: "10d" },
+      65: { condition: "Heavy rain", iconCode: "10d" },
+      71: { condition: "Slight snow", iconCode: "13d" },
+      73: { condition: "Moderate snow", iconCode: "13d" },
+      75: { condition: "Heavy snow", iconCode: "13d" },
+      80: { condition: "Rain showers", iconCode: "09d" },
+      95: { condition: "Thunderstorm", iconCode: "11d" },
+    };
 
-    const r = await fetch(url);
+    const mapWeatherCode = (code) =>
+      WEATHER_CODE_MAP[code] || { condition: "Unknown", iconCode: "01d" };
+
+    const url = new URL("https://api.open-meteo.com/v1/forecast");
+    url.searchParams.set("latitude", String(CLEVELAND_LAT));
+    url.searchParams.set("longitude", String(CLEVELAND_LON));
+    url.searchParams.set(
+      "current",
+      [
+        "temperature_2m",
+        "apparent_temperature",
+        "relativehumidity_2m",
+        "pressure_msl",
+        "windspeed_10m",
+        "weather_code",
+      ].join(",")
+    );
+    url.searchParams.set("daily", ["sunrise", "sunset"].join(","));
+    url.searchParams.set("temperature_unit", "fahrenheit");
+    url.searchParams.set("wind_speed_unit", "mph");
+    url.searchParams.set("timezone", "auto");
+
+    const r = await fetch(url.toString());
     const data = await r.json();
 
     if (!r.ok) {
-      return res.status(r.status).json({
-        error: data?.message || "Weather request failed",
-      });
+      return res.status(500).json({ error: "Weather provider failed", details: data });
     }
 
-    const tz = Number(data.timezone || 0); // seconds offset from UTC
-    const fmtTime = (unixSec) => {
-      if (!unixSec) return null;
-      const d = new Date((unixSec + tz) * 1000);
-      const hh = d.getUTCHours();
-      const mm = d.getUTCMinutes();
-      const hour12 = ((hh + 11) % 12) + 1;
-      const ampm = hh >= 12 ? "PM" : "AM";
-      return `${hour12}:${String(mm).padStart(2, "0")} ${ampm}`;
-    };
+    const c = data.current || {};
+    const { condition, iconCode } = mapWeatherCode(c.weather_code);
 
-    const w0 = data.weather?.[0] || {};
-    return res.status(200).json({
-      city: data.name || city,
-      tempF: data.main?.temp ?? null,
-      feelsLikeF: data.main?.feels_like ?? null,
-      humidity: data.main?.humidity ?? null,
-      pressureMb: data.main?.pressure ?? null,
-      windSpeed: data.wind?.speed ?? null,
-      sunrise: fmtTime(data.sys?.sunrise),
-      sunset: fmtTime(data.sys?.sunset),
-      summary: w0.description ? capitalize(w0.description) : "",
-      condition: w0.main || w0.description || null,
-      iconCode: w0.icon || null,
+    return res.json({
+      city: "Cleveland",
+      tempF: c.temperature_2m ?? null,
+      feelsLikeF: c.apparent_temperature ?? null,
+      humidity: c.relativehumidity_2m ?? null,
+      pressureMb: c.pressure_msl ?? null,
+      windSpeed: c.windspeed_10m ?? null,
+      sunrise: data.daily?.sunrise?.[0] ?? null,
+      sunset: data.daily?.sunset?.[0] ?? null,
+      summary: condition,
+      condition,
+      iconCode,
     });
-  } catch (err) {
-    console.error("Weather API error:", err);
-    return res.status(500).json({ error: "Weather unavailable" });
+  } catch (e) {
+    console.error("weather/today error:", e);
+    return res.status(500).json({ error: "Failed to fetch weather" });
   }
 };
-
-function capitalize(s = "") {
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
-}

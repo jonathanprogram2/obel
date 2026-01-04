@@ -119,6 +119,9 @@ const Dashboard = () => {
 
     const [activeView, setActiveView] = useState("dashboard"); // "dashboard" / "weather" / "calendar"
 
+    const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
+    const apiUrl = (path) => `${API_BASE}${path}`;
+
     // ▶ Daily Market Snapshot drawer state
     const [snapshotOpen, setSnapshotOpen] = useState(false);
     const [snapshotLoading, setSnapshotLoading] = useState(false);
@@ -179,7 +182,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchWeather = async () => {
             try {
-                const res = await fetch("api/weather/today");
+                const res = await fetch(apiUrl("api/weather/today"));
                 const data = await res.json();
 
                 if (!res.ok) {
@@ -280,7 +283,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchQuote = async () => {
             try {
-                const res = await fetch("api/quotes/random");
+                const res = await fetch(apiUrl("api/quotes/random"));
                 const data = await res.json();
 
                 if (!res.ok) throw new Error(data?.error || "Quote request failed");
