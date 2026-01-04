@@ -325,7 +325,12 @@ const WorkspacePage = () => {
         setIsThinking(true);
 
         try {
-            const res = await fetch("assistant/chat", {
+            const API_BASE =
+                process.env.NODE_ENV === "production"
+                    ? "" // same domain on Vercel
+                    : "http://localhost:5001";
+
+            const res = await fetch(`${API_BASE}/api/assistant/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
