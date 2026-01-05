@@ -1145,20 +1145,6 @@ h1 {
   .obel-main {
     grid-template-columns: 1fr !important; /* kills sidebar column behavior if this layout is used */
   }
-
-  .todo-gallery {
-    gap: 14px;
-  }
-
-  .todo-card__content {
-    min-height: 220px;     /* less tall */
-    padding: 14px;         /* less padding */
-  }
-
-  .todo-card__title {
-    font-size: 34px;       /* reduce a bit so it doesn’t explode in landscape */
-    line-height: 1.0;
-  }
 }
 
 
@@ -1198,5 +1184,92 @@ h1 {
     padding: 18px 16px 26px !important;
   }
 }
+
+
+@media (orientation: landscape) and (max-height: 520px) {
+  /* Stop centering that makes it feel shifted */
+  .obel-music-shell {
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+  }
+
+  
+  .obel-main {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 14px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  
+  .content {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+ 
+  .right-content {
+    border-left: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 0 0 15px 15px !important;
+    grid-template-rows: auto !important;
+    padding: 16px 14px !important;
+  }
+
+  .left-content {
+    padding: 16px 14px !important;
+  }
+}
+
+/* ✅ Phone landscape: make To-Dos match mobile stacking */
+@media (orientation: landscape) and (max-height: 520px) {
+  /* Make the To-Do section not try to do a 2-col grid */
+  .todo-gallery #gallery {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    padding: 12px !important;
+
+    /* optional: keeps the cards feeling "mobile sized" and centered */
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* Stop the forced square shape (this is what makes things feel cramped) */
+  .todo-gallery #gallery figure {
+    aspect-ratio: auto !important;
+    padding: 0.6rem !important;
+  }
+
+  /* Slightly tighten the card internals for short height */
+  .todo-card {
+    padding: 14px;
+    gap: 8px;
+  }
+
+  .todo-card__title {
+    font-size: 1.35rem;
+    line-height: 1.12;
+  }
+
+  .todo-card__ai {
+    padding: 10px;
+  }
+
+  .todo-card__aiText {
+    font-size: 0.8rem;
+    line-height: 1.15;
+  }
+
+  .priority-pill {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .assignee-badge {
+    width: 34px;
+    height: 34px;
+  }
+}
+
 
 
