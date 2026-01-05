@@ -1,64 +1,43 @@
-// obel-frontend/api/stocks/watchlist.js
-
-module.exports = async function handler(req, res) {
+module.exports = async (req, res) => {
   try {
-    const symbolsRaw = (req.query.symbols || "").toString().trim();
-    if (!symbolsRaw) {
-      return res.status(400).json({ error: "Missing symbols query param" });
-    }
+    const apiKey = process.env.TWELVE_DATA_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: "Missing TWELVE_DATA_API_KEY" });
 
-    const apiKey = process.env.TWELVE_DATA_API_KEY || "";
-    if (!apiKey) {
-      return res.status(500).json({ error: "Missing TWELVE_DATA_API_KEY" });
-    }
+    const symbolsRaw = String(req.query.symbols || "").trim();
+    if (!symbolsRaw) return res.status(400).json({ error: "Missing symbols query param" });
 
-    const url =
-      "https://api.twelvedata.com/quote" +
-      `?symbol=${encodeURIComponent(symbolsRaw)}` +
-      `&apikey=${encodeURIComponent(apiKey)}`;
+    const symbols = symbolsRaw
+      .split(",")
+      .map(s => s.trim().toUpperCase())
+      .filter(Boolean)
+      .slice(0, 25);
 
-    const r = await fetch(url);
-    const data = await r.json();
-
-    // Twelve Data returns either:
-    // - a single quote object (when 1 symbol)
-    // - or an object keyed by symbol (when multiple)
-    const normalizeOne = (q) => {
-      if (!q || q.status === "error") return null;
-
-      const price = Number(q.close ?? q.price ?? q.last ?? q.open);
-      const change = Number(q.change);
-      const changePercent = Number(q.percent_change ?? q.change_percent);
-
-      return {
-        symbol: q.symbol,
-        name: q.name || q.symbol,
-        price: Number.isFinite(price) ? price : null,
-        change: Number.isFinite(change) ? change : null,
-        changePercent: Number.isFinite(changePercent) ? changePercent : null,
-      };
+    const fetchJson = async (url) => {
+      const r = await fetch(url);
+      const text = await r.text();
+      let data;
+      try { data = JSON.parse(text); } catch { data = null; }
+      if (!r.ok) throw new Error(data?.message || data?.error || text || `HTTP ${r.status}`);
+      return data;
     };
 
-    let quotes = [];
+    const results = await Promise.all(
+      symbols.map(async (sym) => {
+        try {
+          const q = await fetchJson(
+            `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(sym)}&apikey=${apiKey}`
+          );
+          return { symbol: sym, quote: q };
+        } catch (e) {
+          return { symbol: sym, error: e.message };
+        }
+      })
+    );
 
-    if (data && typeof data === "object" && data.symbol) {
-      const one = normalizeOne(data);
-      if (one) quotes = [one];
-    } else if (data && typeof data === "object") {
-      quotes = Object.values(data)
-        .map(normalizeOne)
-        .filter(Boolean);
-    }
-
-    // Helpful caching (optional)
-    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=300");
-
-    return res.status(200).json({
-      asOf: new Date().toISOString(),
-      quotes,
-    });
+    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=120");
+    return res.status(200).json({ asOf: new Date().toISOString(), results });
   } catch (err) {
-    console.error("watchlist error:", err);
-    return res.status(500).json({ error: "Watchlist unavailable" });
+    console.error("watchlist route error:", err);
+    return res.status(500).json({ error: "Failed to fetch watchlist" });
   }
 };
