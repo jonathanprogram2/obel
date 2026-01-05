@@ -54,7 +54,7 @@ const NewsPage = () => {
             setError("");
             try {
                 const res = await fetch(
-                    `http://localhost:5000/api/news?category=${encodeURIComponent(
+                    `api/news?category=${encodeURIComponent(
                         activeCategory
                     )}`
                 );
