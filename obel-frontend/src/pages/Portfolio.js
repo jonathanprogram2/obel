@@ -27,6 +27,29 @@ const ALLOCATION_COLORS = [
     "from-rose-400/80 to-rose-300/40",
 ];
 
+const TickerLogo = ({ logo, symbol }) => {
+  const [ok, setOk] = React.useState(true);
+
+  if (!logo || !ok) {
+    const short = symbol.length > 4 ? symbol.slice(0, 4) : symbol;
+    return (
+      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-500/40 to-yellow-300/10 border border-yellow-500/60 flex items-center justify-center text-[10px] font-orbitron">
+        {short}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={logo}
+      alt={`${symbol} logo`}
+      className="h-8 w-8 rounded-full border border-yellow-500/60 bg-black object-contain"
+      onError={() => setOk(false)}
+    />
+  );
+};
+
+
 
 const Portfolio = () => {
     const [owned, setOwned] = useState([]);  // [{symbol, shares}]
@@ -240,6 +263,7 @@ const Portfolio = () => {
     }, [rows, detailsBySymbol]);
 
     const totalValue = rows.reduce((sum, r) => sum + (r.value || 0), 0);
+
 
     useEffect(() => {
         if (!Number.isFinite(totalValue) || totalValue <= 0) return;
@@ -945,17 +969,7 @@ const Portfolio = () => {
                                                     to={`/token/${r.symbol}`}
                                                     className="flex items-center gap-2 group hover:text-yellow-300 transition"
                                                 >
-                                                    {logo ? (
-                                                        <img
-                                                            src={logo}
-                                                            alt={`${r.symbol} logo`}
-                                                            className="h-8 w-8 rounded-full border border-yellow-500/60 bg-black object-contain group-hover:shadow-[0_0_12px_rgba(234,179,8,0.7)]"
-                                                        />
-                                                    ) : (
-                                                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-yellow-500/40 to-yellow-300/10 border border-yellow-500/60 flex items-center justify-center text-xs font-orbitron group-hover:shadow-[0_0_12px_rgba(234,179,8,0.7)]">
-                                                            {r.symbol}
-                                                        </div>
-                                                    )}
+                                                    <TickerLogo logo={logo} symbol={r.symbol} />
                                                     <span className="font-manrope text-sm">
                                                         {r.symbol}
                                                     </span>

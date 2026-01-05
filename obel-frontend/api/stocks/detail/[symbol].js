@@ -6,134 +6,130 @@ module.exports = async (req, res) => {
     const apiKey = process.env.TWELVE_DATA_API_KEY;
     if (!apiKey) return res.status(500).json({ error: "Missing TWELVE_DATA_API_KEY" });
 
-    const num = (v) => {
-      const n = Number(v);
-      return Number.isFinite(n) ? n : null;
-    };
-
-    const fetchText = async (url) => {
-      const r = await fetch(url);
-      const t = await r.text();
-      if (!r.ok) throw new Error(t || `HTTP ${r.status}`);
-      return t;
-    };
-
     const fetchJson = async (url) => {
-      const t = await fetchText(url);
-      try { return JSON.parse(t); } catch { return null; }
+      const r = await fetch(url);
+      const text = await r.text();
+      let data = null;
+      try { data = JSON.parse(text); } catch { /* ignore */ }
+
+      // Twelve Data sometimes returns 200 with {status:"error"}
+      if (!r.ok) throw new Error(data?.message || data?.error || text || `HTTP ${r.status}`);
+      if (data?.status === "error") throw new Error(data?.message || "Twelve Data error");
+      return data;
     };
 
-    const domainFromUrl = (url) => {
+    // --- Twelve Data: quote + profile ---
+    const quoteRaw = await fetchJson(
+      `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(symbol)}&apikey=${encodeURIComponent(apiKey)}`
+    );
+
+    let profileRaw = null;
+    try {
+      profileRaw = await fetchJson(
+        `https://api.twelvedata.com/profile?symbol=${encodeURIComponent(symbol)}&apikey=${encodeURIComponent(apiKey)}`
+      );
+    } catch (e) {
+      profileRaw = null;
+    }
+
+    // --- Normalize quote fields for your UI ---
+    const price = Number(quoteRaw.close ?? quoteRaw.price ?? quoteRaw.last ?? null);
+    const open = Number(quoteRaw.open ?? null);
+    const high = Number(quoteRaw.high ?? null);
+    const low = Number(quoteRaw.low ?? null);
+    const previousClose = Number(quoteRaw.previous_close ?? quoteRaw.previousClose ?? null);
+    const change = Number(quoteRaw.change ?? null);
+    const changePercent = Number(quoteRaw.percent_change ?? quoteRaw.change_percent ?? null);
+    const timestamp = Number(quoteRaw.timestamp ?? null);
+
+    const fiftyTwo = quoteRaw.fifty_two_week || {};
+    const week52Low = Number(fiftyTwo.low ?? null);
+    const week52High = Number(fiftyTwo.high ?? null);
+    const week52Return = Number(fiftyTwo.low_change_percent ?? null); 
+
+    // --- Normalize profile fields ---
+    const profile = profileRaw
+      ? {
+          symbol,
+          name: profileRaw.name || quoteRaw.name || symbol,
+          exchange: profileRaw.exchange || quoteRaw.exchange || "",
+          currency: profileRaw.currency || quoteRaw.currency || "USD",
+          sector: profileRaw.sector || "",
+          industry: profileRaw.industry || "",
+          country: profileRaw.country || "",
+          description: profileRaw.description || "",
+          employees: profileRaw.employees ? Number(profileRaw.employees) : null,
+          website: profileRaw.website || "",
+          weburl: profileRaw.website || "",
+          marketCap: profileRaw.market_cap ? Number(profileRaw.market_cap) : null,
+          logo: null,
+        }
+      : {
+          symbol,
+          name: quoteRaw.name || symbol,
+          exchange: quoteRaw.exchange || "",
+          currency: quoteRaw.currency || "USD",
+          sector: "",
+          industry: "",
+          country: "",
+          description: "",
+          employees: null,
+          website: "",
+          weburl: "",
+          marketCap: null,
+          logo: null,
+        };
+
+    // Better logo fallback than Clearbit (less likely to be blocked)
+    if (profile.weburl) {
       try {
-        const h = new URL(url).hostname;
-        return h.replace(/^www\./, "");
-      } catch {
-        return "";
-      }
-    };
+        const host = new URL(profile.weburl).hostname;
+        profile.logo = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
+      } catch {}
+    }
 
-    // Very lightweight RSS parsing (no extra deps)
-    const parseYahooRss = (xml) => {
-      const items = [];
-      const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-      let m;
+    // --- News (Yahoo Finance RSS, free) ---
+    const news = [];
+    try {
+      const rssUrl = `https://feeds.finance.yahoo.com/rss/2.0/headline?s=${encodeURIComponent(symbol)}&region=US&lang=en-US`;
+      const rssRes = await fetch(rssUrl);
+      const rssText = await rssRes.text();
 
-      const stripCdata = (s) => (s || "").replace(/<!\[CDATA\[|\]\]>/g, "").trim();
+      const items = rssText.match(/<item>([\s\S]*?)<\/item>/g) || [];
+      for (let i = 0; i < Math.min(items.length, 8); i++) {
+        const item = items[i];
 
-      const getTag = (chunk, tag) => {
-        const r = new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, "i").exec(chunk);
-        return stripCdata(r?.[1] || "");
-      };
+        const title =
+          (item.match(/<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>/)?.[1] ||
+            item.match(/<title>([\s\S]*?)<\/title>/)?.[1] ||
+            "").trim();
 
-      while ((m = itemRegex.exec(xml))) {
-        const chunk = m[1];
-        const headline = getTag(chunk, "title");
-        const url = getTag(chunk, "link");
-        const pubDate = getTag(chunk, "pubDate");
+        const link = (item.match(/<link>([\s\S]*?)<\/link>/)?.[1] || "").trim();
+        const pubDate = (item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1] || "").trim();
+        const dt = pubDate ? Math.floor(new Date(pubDate).getTime() / 1000) : null;
 
-        if (headline && url) {
-          const dt = pubDate ? Math.floor(new Date(pubDate).getTime() / 1000) : null;
-          items.push({
-            id: `${symbol}-${items.length + 1}`,
-            headline,
-            url,
+        if (title && link) {
+          news.push({
+            id: `${symbol}_${i}_${dt || Date.now()}`,
+            headline: title,
+            url: link,
             source: "Yahoo Finance",
             datetime: dt,
           });
         }
       }
-
-      return items.slice(0, 8);
-    };
-
-    // Pull data from Twelve Data
-    const base = "https://api.twelvedata.com";
-
-    const [quoteRaw, profileRaw, statsRaw] = await Promise.all([
-      fetchJson(`${base}/quote?symbol=${encodeURIComponent(symbol)}&apikey=${apiKey}`),
-      fetchJson(`${base}/profile?symbol=${encodeURIComponent(symbol)}&apikey=${apiKey}`),
-      fetchJson(`${base}/statistics?symbol=${encodeURIComponent(symbol)}&apikey=${apiKey}`),
-    ]);
-
-    if (!quoteRaw || quoteRaw.status === "error") {
-      return res.status(500).json({ error: quoteRaw?.message || "Quote failed" });
+    } catch {
+      // If RSS fails, just return empty news
     }
 
-    const website = profileRaw?.website || "";
-    const domain = domainFromUrl(website);
-    const logo = domain ? `https://logo.clearbit.com/${domain}` : "";
+    // Cache to reduce rate limit pain
+    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=300");
 
-    // Shape EXACTLY how StockDetailPage.js reads it
-    const quote = {
-      symbol,
-      price: num(quoteRaw.close ?? quoteRaw.price),
-      change: num(quoteRaw.change),
-      changePercent: num(quoteRaw.percent_change ?? quoteRaw.change_percent),
-      high: num(quoteRaw.high),
-      low: num(quoteRaw.low),
-      open: num(quoteRaw.open),
-      previousClose: num(quoteRaw.previous_close),
-      timestamp: num(quoteRaw.timestamp),
-    };
-
-    const profile = {
-      symbol,
-      name: profileRaw?.name || quoteRaw?.name || symbol,
-      exchange: quoteRaw?.exchange || profileRaw?.exchange || "",
-      currency: quoteRaw?.currency || profileRaw?.currency || "USD",
-      industry: profileRaw?.industry || profileRaw?.sector || "",
-      country: profileRaw?.country || "",
-      weburl: website || "",
-      logo,
-      marketCap: num(statsRaw?.market_cap) ?? null,
-    };
-
-    const metrics = {
-      peTTM: num(statsRaw?.pe_ttm ?? statsRaw?.pe),
-      epsTTM: num(statsRaw?.eps_ttm ?? statsRaw?.eps),
-      roeTTM: num(statsRaw?.roe),
-      week52Low: num(statsRaw?.fifty_two_week?.low),
-      week52High: num(statsRaw?.fifty_two_week?.high),
-      week52Return: num(statsRaw?.fifty_two_week?.return),
-    };
-
-    // Headlines (Yahoo RSS)
-    let news = [];
-    try {
-      const rssXml = await fetchText(
-        `https://feeds.finance.yahoo.com/rss/2.0/headline?s=${encodeURIComponent(symbol)}&region=US&lang=en-US`
-      );
-      news = parseYahooRss(rssXml);
-    } catch (e) {
-      news = [];
-    }
-
-    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=120");
     return res.status(200).json({
       asOf: new Date().toISOString(),
-      quote,
+      quote: { symbol, price, open, high, low, previousClose, change, changePercent, timestamp },
       profile,
-      metrics,
+      metrics: { week52Low, week52High, week52Return, peTTM: null, epsTTM: null, roeTTM: null },
       news,
     });
   } catch (err) {

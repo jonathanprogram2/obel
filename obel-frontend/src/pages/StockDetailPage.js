@@ -85,6 +85,8 @@ const StockDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [data, setData] = useState(null);
+    const [logoOk, setLogoOk] = useState(true);
+
 
     useEffect(() => {
         const fetchDetail = async () => {
@@ -155,15 +157,16 @@ const StockDetailPage = () => {
                         <div className="lg:col-span-2 rounded-3xl border border-yellow-500/50 bg-gradient-to-br from-[#090910] via-[#12121f] to-[#050507] shadow-[0_0_40px_rgba(234,179,8,0.28)] p-5 md:p-6 flex flex-col justify-between">
                             <div className="flex items-start justify-between gap-4 mb-4">
                                 <div className="flex items-center gap-4">
-                                    {profile.logo ? (
+                                    {profile.logo && logoOk ? (
                                         <img
                                             src={profile.logo}
                                             alt={profile.name || symbol}
                                             className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-black/40 border border-yellow-500/40 object-contain p-1"
+                                            onError={() => setLogoOk(false)}
                                         />
                                     ) : (
                                         <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-gradient-to-br from-yellow-500/50 to-yellow-300/10 border border-yellow-500/60 flex items-center justify-center font-orbitron text-sm">
-                                            {symbol.slice(0, 3)}
+                                            {symbol}
                                         </div>
                                     )}
                                     <div>
