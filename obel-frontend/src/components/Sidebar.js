@@ -85,7 +85,7 @@ const Sidebar = ({ username }) => {
                         <FaHandHoldingUsd /> Budgets
                     </Link>
 
-                    <Link to="/dashboard/news" className={navItemClass(isActive("/dashboard/borrow"))}>
+                    <Link to="/dashboard/news" className={navItemClass(isActive("/dashboard/news"))}>
                         <NewsIcon /> News
                     </Link>
 

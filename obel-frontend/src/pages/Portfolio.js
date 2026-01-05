@@ -9,6 +9,11 @@ const HOLDINGS_STORAGE_KEY = "obelOwnedStocks";
 const PORTFOLIO_HISTORY_KEY = "obelPortfolioHistory";
 const PORTFOLIO_TXN_KEY = "obelPortfolioTransactions";
 
+const QUOTES_CACHE_TTL_MS = 4 * 60 * 1000; // 4 min (slightly under ~5 min window)
+const quotesCacheKey = (symbols) => `obelQuotesCache:${symbols}`;
+
+const DETAILS_CACHE_KEY = "obelDetailsCache";
+
 // For now lets use a small universe that works on the free tier finnhub api
 const AVAILABLE_SYMBOLS = [
     { symbol: "AAPL", label: "Apple Inc." },
@@ -135,6 +140,24 @@ const Portfolio = () => {
         }
     }, []);
 
+    // ----- Load cached details (logos / profiles) on first mount -----
+    useEffect(() => {
+    try {
+        const raw = window.localStorage.getItem(DETAILS_CACHE_KEY);
+        if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+            setDetailsBySymbol(parsed);
+        }
+        }
+    } catch (e) {
+        console.warn("Failed to parse details cache", e);
+    }
+    }, []);
+
+
+
+
     // ---- fetch quotes whenever owned changes ----
     useEffect(() => {
         const fetchQuotes = async () => {
@@ -144,23 +167,60 @@ const Portfolio = () => {
             }
 
             const symbols = owned.map((h) => h.symbol).join(",");
+
+             // 1) Hydrate from cache immediately (prevents blank UI)
+            const key = quotesCacheKey(symbols);
+            try {
+                const cachedRaw = window.localStorage.getItem(key);
+                if (cachedRaw) {
+                    const cached = JSON.parse(cachedRaw);
+                    if (cached?.data) setQuotes(cached.data); // show instantly
+                    // If cache is fresh, skip network request entirely
+                    if (cached?.ts && Date.now() - cached.ts < QUOTES_CACHE_TTL_MS) {
+                    return;
+                    }
+                }
+            } catch (e) {
+            // ignore cache parse issues
+            }
+
+            // 2) Fetch (but don't wipe UI if it fails)
+            const controller = new AbortController();
             setLoadingQuotes(true);
             setError("");
 
             try {
-                const res = await fetch(`${API_BASE}/api/stocks/watchlist?symbols=${encodeURIComponent(symbols)}`
-                );
-                if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}`);
-                }
-                const json = await res.json();
-                setQuotes(json);
-            } catch (err) {
-                console.error("❌ portfolio quotes fetch error:", err);
-                setError("Could not load latest prices. Try again in a minute.");
-            } finally {
-                setLoadingQuotes(false);
+            const res = await fetch(
+                `${API_BASE}/api/stocks/watchlist?symbols=${encodeURIComponent(symbols)}`,
+                { signal: controller.signal }
+            );
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}`);
             }
+
+            const json = await res.json();
+            setQuotes(json);
+
+            // 3) Save success to cache
+            try {
+                window.localStorage.setItem(
+                    key,
+                    JSON.stringify({ ts: Date.now(), data: json })
+                );
+            } catch (e) {}
+        } catch (err) {
+            // Abort = navigation; don't show errors
+            if (err.name !== "AbortError") {
+                console.error("❌ portfolio quotes fetch error:", err);
+                setError("Could not refresh prices right now. Showing last known values.");
+                // IMPORTANT: do NOT setQuotes(null) here
+            }
+        } finally {
+            if (!controller.signal.aborted) setLoadingQuotes(false);
+        }
+
+            return () => controller.abort();
         };
 
         fetchQuotes();
@@ -200,7 +260,19 @@ const Portfolio = () => {
             }
 
             if (Object.keys(next).length) {
-                setDetailsBySymbol(prev => ({ ...prev, ... next }));
+                setDetailsBySymbol((prev) => {
+                    const merged = { ...prev, ...next };
+
+                    // ✅ cache it
+                    try {
+                        window.localStorage.setItem(
+                            DETAILS_CACHE_KEY, 
+                            JSON.stringify(merged)
+                        );
+                    } catch (e) {}
+
+                    return merged;
+                });
             }
         };
 
