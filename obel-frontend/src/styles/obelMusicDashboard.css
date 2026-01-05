@@ -1096,3 +1096,27 @@ h1 {
 
 }
 
+/* Mobile-only: make the AI suggestion box smaller */
+@media (max-width: 520px) {
+  .todo-card__ai {
+    padding: 8px;
+    border-radius: 12px;
+    margin-top: -50px;
+    margin-left: 90px;
+  }
+
+  .todo-card__aiLabel {
+    font-size: 0.62rem;
+    margin-bottom: 4px;
+    letter-spacing: 0.14em;
+  }
+
+  .todo-card__aiText {
+    font-size: 0.76rem;
+    line-height: 1.15;
+  }
+
+  .todo-card__aiDismiss {
+    display: none;
+  }
+}
