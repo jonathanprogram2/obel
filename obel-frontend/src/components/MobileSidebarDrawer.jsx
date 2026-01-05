@@ -76,7 +76,7 @@ const MobileSidebarDrawer = ({ username, isOpen, onClose }) => {
     return (
         <>
             {/* top pill bar */}
-            <div className="fixed top-3 left-3 right-3 z-[60] mobile-navbar">
+            <div className="fixed top-3 left-3 right-3 z-[60] mobile-only">
                 <div className="flex items-center justify-between rounded-full border border-white/10 bg-black/55 backdrop-blur-xl px-4 py-2 shadow-[0_0_30px_rgba(0,0,0,0.45)]">
                     <div className="flex items-center gap-3">
                         <img

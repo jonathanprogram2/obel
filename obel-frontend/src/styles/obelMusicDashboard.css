@@ -1140,3 +1140,39 @@ h1 {
   }
 }
 
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .obel-main {
+    grid-template-columns: 1fr !important; /* kills sidebar column behavior if this layout is used */
+  }
+
+  .todo-gallery {
+    gap: 14px;
+  }
+
+  .todo-card__content {
+    min-height: 220px;     /* less tall */
+    padding: 14px;         /* less padding */
+  }
+
+  .todo-card__title {
+    font-size: 34px;       /* reduce a bit so it doesn’t explode in landscape */
+    line-height: 1.0;
+  }
+}
+
+
+@media (max-width: 520px) {
+  .todo-card__aiWrap {
+    width: 210px;      /* was 250px */
+    padding: 8px 10px; /* was 12px */
+    margin-top: 10px;  /* was 14px */
+  }
+
+  .todo-card__aiText {
+    font-size: 12px;   /* slightly smaller */
+    line-height: 1.15;
+  }
+}
+
+

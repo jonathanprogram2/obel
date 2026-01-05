@@ -1579,3 +1579,22 @@ body {
     display: flex !important;
   }
 }
+
+/* ---------- Utility visibility helpers ---------- */
+.desktop-only { display: block; }
+.mobile-only  { display: none; }
+
+/* Regular mobile */
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+  .mobile-only  { display: flex !important; }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .desktop-only { display: none !important; }
+  .mobile-only  { display: flex !important; }
+
+  html, body, #root {
+    overflow-x: hidden !important;
+  }
+}
