@@ -1,60 +1,55 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   try {
     const apiKey = process.env.TWELVE_DATA_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({ error: "Missing TWELVE_DATA_API_KEY" });
-    }
+    if (!apiKey) return res.status(500).json({ error: "Missing TWELVE_DATA_API_KEY" });
 
-    const raw = req.query.symbol;
-    const symbol = Array.isArray(raw) ? raw[0] : raw;
-    if (!symbol) return res.status(400).json({ error: "Missing symbol" });
+    const sym = (req.query.symbol || "").toUpperCase();
+    if (!sym) return res.status(400).json({ error: "Missing symbol" });
 
-    const sym = symbol.toUpperCase();
     const base = "https://api.twelvedata.com";
 
     const safeJson = async (r) => {
-      const txt = await r.text();
-      try { return JSON.parse(txt); } catch { return { __raw: txt }; }
+      try { return await r.json(); } catch { return null; }
     };
 
     const domainFromUrl = (url) => {
-      try {
-        const h = new URL(url).hostname;
-        return h.replace(/^www\./, "");
-      } catch {
-        return "";
-      }
+      try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return ""; }
+    };
+
+    const num = (v) => {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
     };
 
     const parseYahooRss = (xml) => {
       const items = [];
-      const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-      let m;
-      while ((m = itemRegex.exec(xml))) {
-        const chunk = m[1];
+      const blocks = xml.split("<item>").slice(1);
+      const get = (tag, s) => {
+        const m = s.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, "i"));
+        return m ? m[1] : "";
+      };
 
-        const get = (tag) => {
-          const r = new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, "i").exec(chunk);
-          return r?.[1]?.trim() || "";
-        };
-
-        const title = get("title").replace(/<!\[CDATA\[|\]\]>/g, "").trim();
-        const link = get("link").replace(/<!\[CDATA\[|\]\]>/g, "").trim();
-        const pubDate = get("pubDate").trim();
+      for (let i = 0; i < blocks.length; i++) {
+        const b = blocks[i];
+        const title = get("title", b).replace(/<!\[CDATA\[|\]\]>/g, "").trim();
+        const link = get("link", b).trim();
+        const pubDate = get("pubDate", b).trim();
 
         if (title && link) {
+          const dt = pubDate ? Math.floor(new Date(pubDate).getTime() / 1000) : null;
           items.push({
-            title,
+            id: `${sym}-${i}`,
+            headline: title,
             url: link,
             source: "Yahoo Finance",
-            publishedAt: pubDate,
+            datetime: dt,
           });
         }
       }
       return items.slice(0, 6);
     };
 
-    // Fetch quote + profile + statistics (best effort)
+    // Fetch quote + profile + statistics
     const [quoteRes, profileRes, statsRes] = await Promise.all([
       fetch(`${base}/quote?symbol=${encodeURIComponent(sym)}&apikey=${apiKey}`),
       fetch(`${base}/profile?symbol=${encodeURIComponent(sym)}&apikey=${apiKey}`),
@@ -73,48 +68,54 @@ export default async function handler(req, res) {
     const domain = domainFromUrl(website);
     const logo = domain ? `https://logo.clearbit.com/${domain}` : "";
 
-    const num = (v) => {
-      const n = Number(v);
-      return Number.isFinite(n) ? n : null;
-    };
+    // ✅ Match what StockDetailPage expects: quote.price, quote.changePercent, quote.previousClose, quote.timestamp
+    const price = num(quoteRaw?.close ?? quoteRaw?.price);
+    const change = num(quoteRaw?.change);
+    const changePercent = num(quoteRaw?.percent_change);
+    const high = num(quoteRaw?.high);
+    const low = num(quoteRaw?.low);
+    const open = num(quoteRaw?.open);
+    const previousClose = num(quoteRaw?.previous_close);
 
     const quote = {
       symbol: quoteRaw?.symbol || sym,
-      name: quoteRaw?.name || profileRaw?.name || sym,
-      exchange: quoteRaw?.exchange || profileRaw?.exchange || "",
-      currency: quoteRaw?.currency || profileRaw?.currency || "USD",
-      lastPrice: num(quoteRaw?.close ?? quoteRaw?.price),
-      change: num(quoteRaw?.change),
-      percentChange: num(quoteRaw?.percent_change),
-      high: num(quoteRaw?.high),
-      low: num(quoteRaw?.low),
-      open: num(quoteRaw?.open),
-      prevClose: num(quoteRaw?.previous_close),
-      updatedAt: new Date().toISOString(),
+      price,
+      change,
+      changePercent,
+      high,
+      low,
+      open,
+      previousClose,
+      timestamp: Math.floor(Date.now() / 1000),
     };
+
+    
+    const marketCap = num(statsRaw?.market_cap);
 
     const profile = {
       symbol: sym,
-      name: profileRaw?.name || quote.name,
-      exchange: quote.exchange,
-      currency: quote.currency,
+      name: profileRaw?.name || sym,
+      exchange: quoteRaw?.exchange || profileRaw?.exchange || "",
+      currency: quoteRaw?.currency || profileRaw?.currency || "USD",
       industry: profileRaw?.industry || profileRaw?.sector || "",
       country: profileRaw?.country || "",
+      marketCap,
       website,
-      logo, // <-- fixes your “AAP / MSF” fallback in prod
+      weburl: website,
+      logo,
     };
 
+    // ✅ Match what StockDetailPage expects: peTTM/epsTTM/roeTTM/week52Low/week52High/week52Return
     const metrics = {
-      marketCap: num(statsRaw?.market_cap),
-      peTtm: num(statsRaw?.pe_ttm ?? statsRaw?.pe),
-      epsTtm: num(statsRaw?.eps_ttm ?? statsRaw?.eps),
-      roeTtm: num(statsRaw?.roe),
+      peTTM: num(statsRaw?.pe_ttm ?? statsRaw?.pe),
+      epsTTM: num(statsRaw?.eps_ttm ?? statsRaw?.eps),
+      roeTTM: num(statsRaw?.roe),
       week52Low: num(statsRaw?.fifty_two_week?.low),
       week52High: num(statsRaw?.fifty_two_week?.high),
       week52Return: num(statsRaw?.fifty_two_week?.return),
     };
 
-    // Headlines (free, no API key)
+    // Headlines (free)
     let news = [];
     try {
       const rss = await fetch(
@@ -126,9 +127,15 @@ export default async function handler(req, res) {
       news = [];
     }
 
-    return res.status(200).json({ quote, profile, metrics, news });
+    return res.status(200).json({
+      asOf: new Date().toISOString(),
+      quote,
+      profile,
+      metrics,
+      news,
+    });
   } catch (e) {
     console.error("detail/[symbol] error:", e);
     return res.status(500).json({ error: "Server error" });
   }
-}
+};
