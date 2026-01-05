@@ -1120,3 +1120,9 @@ h1 {
     display: none;
   }
 }
+
+@media (max-width: 520px) {
+  .todo-gallery #gallery figure {
+    padding: .65rem; /* was .75rem */
+  }
+}
