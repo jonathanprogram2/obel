@@ -1541,3 +1541,25 @@ body {
     width: 100%;
     height: 520px;
   }
+
+/* Mobile landscape fixes */
+@media (max-width: 900px) and (orientation: landscape) {
+  /* Example: reduce giant padding / spacing */
+  .page-wrap {
+    padding-top: 4rem;
+  }
+
+  /* Example: prevent huge cards from overflowing */
+  .todo-card {
+    max-height: 70vh;
+    overflow: auto;
+  }
+
+  /* Example: tighten text */
+  h1 { font-size: 1.6rem; }
+}
+
+.page-wrap {
+  min-height: 100vh;
+  min-height: 100dvh; /* better on modern mobile browsers */
+}
