@@ -101,7 +101,7 @@ const MobileSidebarDrawer = ({ username, isOpen, onClose }) => {
             {/* overlay */}
             {open && (
                 <div
-                    className="mobile-only fixed inset-0 z-[70] bg-black/55"
+                    className="fixed inset-0 z-[70] bg-black/55"
                     onClick={() => setOpen(false)}
                     aria-hidden="true"
                 />
@@ -109,7 +109,7 @@ const MobileSidebarDrawer = ({ username, isOpen, onClose }) => {
 
             {/* drawer */}
             <aside
-                className={`mobile-only fixed top-0 bottom-0 left-0 z-[80] w-[78vw] max-w-[320px] bg-black border-r border-white/10 p-6
+                className={`fixed top-0 bottom-0 left-0 z-[80] w-[78vw] max-w-[320px] bg-black border-r border-white/10 p-6
                     transform transition-transform duration-200 ease-out ${open ? "translate-x-0" : "-translate-x-full"}`}
                 role="dialog"
                 aria-modal="true"
