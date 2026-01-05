@@ -226,7 +226,7 @@ const NewsPage = () => {
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {formattedArticles.map((article, index) => {
                     const isBookmarked = !!bookmarks[article.id];
-                    const sourceName = article.source?.name || article.source || "Unknown source";
+                    const sourceName = article.sourceName || article.source?.name || article.source || "Unknown source";
                     const avatarLetter =
                         (sourceName && sourceName[0]?.toUpperCase()) || "?";
 
