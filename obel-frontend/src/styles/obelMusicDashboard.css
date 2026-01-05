@@ -1126,3 +1126,17 @@ h1 {
     padding: .65rem; /* was .75rem */
   }
 }
+
+/* Phone-landscape = mobile layout (no sidebar column) */
+@media (orientation: landscape) and (max-height: 520px) {
+  .obel-main {
+    grid-template-columns: 1fr !important;
+    margin: 18px !important;
+    width: 96% !important;
+  }
+
+  .main-menu {
+    display: none !important;
+  }
+}
+

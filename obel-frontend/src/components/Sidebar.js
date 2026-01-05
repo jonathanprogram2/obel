@@ -59,7 +59,7 @@ const Sidebar = ({ username }) => {
 
 
     return (
-        <div className="w-64 min-h-screen bg-[#000000] border-r border-[#E4E6E7] p-6 font-orbitron tracking-wider text-lg fixed z-50 flex flex-col justify-between">
+        <div className="w-64 min-h-screen bg-[#000000] border-r border-[#E4E6E7] p-6 font-orbitron tracking-wider text-lg fixed z-50 flex flex-col justify-between desktop-sidebar">
             {/* Top: avatar + nav */}
             <div>
                 <div className="flex flex-col items-center mb-8">

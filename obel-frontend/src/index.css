@@ -1561,5 +1561,21 @@ body {
 
 .page-wrap {
   min-height: 100vh;
-  min-height: 100dvh; /* better on modern mobile browsers */
+  min-height: 100dvh;
+}
+
+/* Treat phone-landscape like mobile */
+@media (orientation: landscape) and (max-height: 520px) {
+  .page-wrap {
+    padding-top: 4rem;
+  }
+
+  /* Force-hide desktop sidebar + force-show mobile nav */
+  .desktop-sidebar {
+    display: none !important;
+  }
+
+  .mobile-navbar {
+    display: flex !important;
+  }
 }
