@@ -6,86 +6,135 @@ module.exports = async (req, res) => {
     const apiKey = process.env.TWELVE_DATA_API_KEY;
     if (!apiKey) return res.status(500).json({ error: "Missing TWELVE_DATA_API_KEY" });
 
-    const toNum = (v) => {
-      const n = typeof v === "number" ? v : parseFloat(String(v ?? "").replace(/,/g, ""));
+    const num = (v) => {
+      const n = Number(v);
       return Number.isFinite(n) ? n : null;
     };
 
-    const fetchJson = async (url) => {
+    const fetchText = async (url) => {
       const r = await fetch(url);
-      const text = await r.text();
-      let data = null;
-      try { data = JSON.parse(text); } catch {}
-      if (!r.ok) throw new Error(data?.message || data?.error || text || `HTTP ${r.status}`);
-      return data;
+      const t = await r.text();
+      if (!r.ok) throw new Error(t || `HTTP ${r.status}`);
+      return t;
     };
 
-    const [qRaw, pRaw] = await Promise.all([
-      fetchJson(`https://api.twelvedata.com/quote?symbol=${encodeURIComponent(symbol)}&apikey=${apiKey}`),
-      fetchJson(`https://api.twelvedata.com/profile?symbol=${encodeURIComponent(symbol)}&apikey=${apiKey}`),
+    const fetchJson = async (url) => {
+      const t = await fetchText(url);
+      try { return JSON.parse(t); } catch { return null; }
+    };
+
+    const domainFromUrl = (url) => {
+      try {
+        const h = new URL(url).hostname;
+        return h.replace(/^www\./, "");
+      } catch {
+        return "";
+      }
+    };
+
+    // Very lightweight RSS parsing (no extra deps)
+    const parseYahooRss = (xml) => {
+      const items = [];
+      const itemRegex = /<item>([\s\S]*?)<\/item>/g;
+      let m;
+
+      const stripCdata = (s) => (s || "").replace(/<!\[CDATA\[|\]\]>/g, "").trim();
+
+      const getTag = (chunk, tag) => {
+        const r = new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, "i").exec(chunk);
+        return stripCdata(r?.[1] || "");
+      };
+
+      while ((m = itemRegex.exec(xml))) {
+        const chunk = m[1];
+        const headline = getTag(chunk, "title");
+        const url = getTag(chunk, "link");
+        const pubDate = getTag(chunk, "pubDate");
+
+        if (headline && url) {
+          const dt = pubDate ? Math.floor(new Date(pubDate).getTime() / 1000) : null;
+          items.push({
+            id: `${symbol}-${items.length + 1}`,
+            headline,
+            url,
+            source: "Yahoo Finance",
+            datetime: dt,
+          });
+        }
+      }
+
+      return items.slice(0, 8);
+    };
+
+    // Pull data from Twelve Data
+    const base = "https://api.twelvedata.com";
+
+    const [quoteRaw, profileRaw, statsRaw] = await Promise.all([
+      fetchJson(`${base}/quote?symbol=${encodeURIComponent(symbol)}&apikey=${apiKey}`),
+      fetchJson(`${base}/profile?symbol=${encodeURIComponent(symbol)}&apikey=${apiKey}`),
+      fetchJson(`${base}/statistics?symbol=${encodeURIComponent(symbol)}&apikey=${apiKey}`),
     ]);
 
-    // Normalize quote into what the React UI expects
+    if (!quoteRaw || quoteRaw.status === "error") {
+      return res.status(500).json({ error: quoteRaw?.message || "Quote failed" });
+    }
+
+    const website = profileRaw?.website || "";
+    const domain = domainFromUrl(website);
+    const logo = domain ? `https://logo.clearbit.com/${domain}` : "";
+
+    // Shape EXACTLY how StockDetailPage.js reads it
     const quote = {
       symbol,
-      price: toNum(qRaw.close ?? qRaw.price),
-      change: toNum(qRaw.change),
-      changePercent: toNum(qRaw.percent_change ?? qRaw.changePercent),
-      high: toNum(qRaw.high),
-      low: toNum(qRaw.low),
-      open: toNum(qRaw.open),
-      previousClose: toNum(qRaw.previous_close ?? qRaw.previousClose),
-      timestamp: toNum(qRaw.timestamp) ? Math.floor(toNum(qRaw.timestamp)) : null,
+      price: num(quoteRaw.close ?? quoteRaw.price),
+      change: num(quoteRaw.change),
+      changePercent: num(quoteRaw.percent_change ?? quoteRaw.change_percent),
+      high: num(quoteRaw.high),
+      low: num(quoteRaw.low),
+      open: num(quoteRaw.open),
+      previousClose: num(quoteRaw.previous_close),
+      timestamp: num(quoteRaw.timestamp),
     };
-
-    const website = pRaw.website || pRaw.weburl || "";
-    let logo = pRaw.logo || null;
-
-    
-    if (!logo && website) {
-      try {
-        const domain = website.replace(/^https?:\/\//, "").split("/")[0];
-        if (domain) logo = `https://logo.clearbit.com/${domain}`;
-      } catch {}
-    }
 
     const profile = {
       symbol,
-      name: pRaw.name || symbol,
-      exchange: pRaw.exchange || null,
-      currency: pRaw.currency || "USD",
-      industry: pRaw.industry || null,
-      country: pRaw.country || null,
-      marketCap: toNum(pRaw.market_cap ?? pRaw.marketCap) ?? null,
-      weburl: website || null,
+      name: profileRaw?.name || quoteRaw?.name || symbol,
+      exchange: quoteRaw?.exchange || profileRaw?.exchange || "",
+      currency: quoteRaw?.currency || profileRaw?.currency || "USD",
+      industry: profileRaw?.industry || profileRaw?.sector || "",
+      country: profileRaw?.country || "",
+      weburl: website || "",
       logo,
-      description: pRaw.description || null,
+      marketCap: num(statsRaw?.market_cap) ?? null,
     };
-
-    
-    const w52Low = toNum(qRaw?.fifty_two_week?.low);
-    const w52High = toNum(qRaw?.fifty_two_week?.high);
-    const week52Return =
-      quote.price != null && w52Low != null && w52Low > 0
-        ? ((quote.price - w52Low) / w52Low) * 100
-        : null;
 
     const metrics = {
-      peTTM: null,
-      epsTTM: null,
-      roeTTM: null,
-      week52Low: w52Low,
-      week52High: w52High,
-      week52Return,
+      peTTM: num(statsRaw?.pe_ttm ?? statsRaw?.pe),
+      epsTTM: num(statsRaw?.eps_ttm ?? statsRaw?.eps),
+      roeTTM: num(statsRaw?.roe),
+      week52Low: num(statsRaw?.fifty_two_week?.low),
+      week52High: num(statsRaw?.fifty_two_week?.high),
+      week52Return: num(statsRaw?.fifty_two_week?.return),
     };
 
-    res.setHeader("Cache-Control", "s-maxage=20, stale-while-revalidate=120");
+    // Headlines (Yahoo RSS)
+    let news = [];
+    try {
+      const rssXml = await fetchText(
+        `https://feeds.finance.yahoo.com/rss/2.0/headline?s=${encodeURIComponent(symbol)}&region=US&lang=en-US`
+      );
+      news = parseYahooRss(rssXml);
+    } catch (e) {
+      news = [];
+    }
+
+    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=120");
     return res.status(200).json({
       asOf: new Date().toISOString(),
       quote,
       profile,
       metrics,
-      news: [], 
+      news,
     });
   } catch (err) {
     console.error("detail route error:", err);

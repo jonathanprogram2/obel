@@ -6,46 +6,42 @@ module.exports = async (req, res) => {
     const symbolsRaw = String(req.query.symbols || "").trim();
     if (!symbolsRaw) return res.status(400).json({ error: "Missing symbols query param" });
 
-    const symbols = symbolsRaw
-      .split(",")
-      .map((s) => s.trim().toUpperCase())
-      .filter(Boolean)
-      .slice(0, 25);
+    // Twelve Data supports comma-separated symbols in one call
+    const url =
+      `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(symbolsRaw)}&apikey=${encodeURIComponent(apiKey)}`;
 
-    const toNum = (v) => {
-      const n = typeof v === "number" ? v : parseFloat(String(v ?? "").replace(/,/g, ""));
+    const r = await fetch(url);
+    const data = await r.json();
+
+    const num = (v) => {
+      const n = Number(v);
       return Number.isFinite(n) ? n : null;
     };
 
-    const fetchJson = async (url) => {
-      const r = await fetch(url);
-      const text = await r.text();
-      let data = null;
-      try { data = JSON.parse(text); } catch {}
-      if (!r.ok) throw new Error(data?.message || data?.error || text || `HTTP ${r.status}`);
-      return data;
+    const normalizeOne = (q) => {
+      if (!q || q.status === "error") return null;
+
+      return {
+        symbol: q.symbol,
+        name: q.name || q.symbol,
+        price: num(q.close ?? q.price ?? q.last ?? q.open),
+        change: num(q.change),
+        changePercent: num(q.percent_change ?? q.change_percent),
+      };
     };
 
-    // Twelve Data supports multi-symbol quote in one call: quote?symbol=AAPL,MSFT
-    const batch = await fetchJson(
-      `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(symbols.join(","))}&apikey=${apiKey}`
-    );
+    let quotes = [];
 
-    // batch can be {AAPL:{...}, MSFT:{...}} OR error object
-    const quotes = symbols.map((sym) => {
-      const q = batch?.[sym];
-      if (!q || q.status === "error") {
-        return { symbol: sym, price: null, change: null, changePercent: null, error: q?.message || q?.error || "No data" };
-      }
+    // If only 1 symbol, Twelve Data returns a single object with `symbol`
+    if (data && typeof data === "object" && data.symbol) {
+      const one = normalizeOne(data);
+      if (one) quotes = [one];
+    } else if (data && typeof data === "object") {
+      // Otherwise it returns an object keyed by symbol
+      quotes = Object.values(data).map(normalizeOne).filter(Boolean);
+    }
 
-      const price = toNum(q.close ?? q.price);
-      const change = toNum(q.change);
-      const changePercent = toNum(q.percent_change ?? q.changePercent);
-
-      return { symbol: sym, price, change, changePercent };
-    });
-
-    res.setHeader("Cache-Control", "s-maxage=20, stale-while-revalidate=120");
+    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=300");
     return res.status(200).json({ asOf: new Date().toISOString(), quotes });
   } catch (err) {
     console.error("watchlist route error:", err);
