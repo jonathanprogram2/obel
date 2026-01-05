@@ -1175,4 +1175,28 @@ h1 {
   }
 }
 
+/* PHONE LANDSCAPE (Dashboard shell) */
+@media (orientation: landscape) and (max-height: 600px) {
+  /* push content below the top pill bar */
+  .obel-music-shell {
+    padding-top: 84px !important;
+  }
+
+  /* kill sidebar column layout */
+  .obel-main {
+    grid-template-columns: 1fr !important;
+    width: calc(100% - 28px) !important;
+    margin: 14px auto !important;
+  }
+
+  .main-menu {
+    display: none !important;
+  }
+
+  /* tighten spacing so it fits vertically */
+  .content {
+    padding: 18px 16px 26px !important;
+  }
+}
+
 

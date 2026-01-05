@@ -1598,3 +1598,28 @@ body {
     overflow-x: hidden !important;
   }
 }
+
+
+/* =========================================================
+   PHONE LANDSCAPE = FORCE MOBILE BEHAVIOR
+   (height is the reliable signal for phones in landscape)
+========================================================= */
+@media (orientation: landscape) and (max-height: 600px) {
+  /* Force mobile nav, hide desktop sidebar */
+  .desktop-only { display: none !important; }
+  .mobile-only  { display: flex !important; }
+
+  html, body, #root { overflow-x: hidden !important; }
+
+  /* IMPORTANT: neutralize common Tailwind md/lg layout flips*/
+  .md\:flex-row { flex-direction: column !important; }
+  .md\:grid-cols-2 { grid-template-columns: 1fr !important; }
+  .md\:grid-cols-3 { grid-template-columns: 1fr !important; }
+  .lg\:grid-cols-2,
+  .lg\:grid-cols-3,
+  .lg\:grid-cols-4 { grid-template-columns: 1fr !important; }
+
+  .md\:w-1\/2,
+  .md\:w-2\/3,
+  .md\:w-1\/3 { width: 100% !important; }
+}

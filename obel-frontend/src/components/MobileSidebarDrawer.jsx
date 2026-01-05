@@ -77,20 +77,20 @@ const MobileSidebarDrawer = ({ username, isOpen, onClose }) => {
         <>
             {/* top pill bar */}
             <div className="fixed top-3 left-3 right-3 z-[60] mobile-only">
-                <div className="flex items-center justify-between rounded-full border border-white/10 bg-black/55 backdrop-blur-xl px-4 py-2 shadow-[0_0_30px_rgba(0,0,0,0.45)]">
+                <div className="flex items-center justify-between rounded-full border border-white/10 bg-black/55 backdrop-blur-xl px-5 py-3 shadow-[0_0_30px_rgba(0,0,0,0.45)]">
                     <div className="flex items-center gap-3">
                         <img
                             src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg"
                             alt={username}
-                            className="h-9 w-9 rounded-full object-cover border border-yellow-400/70 shadow-[0_0_18px_rgba(250,204,21,0.45)]"
+                            className="h-11 w-11 rounded-full object-cover border border-yellow-400/70 shadow-[0_0_18px_rgba(250,204,21,0.45)]"
                         />
-                        <div className="text-sm font-semibold text-white/90">@{username}</div>
+                        <div className="text-base font-semibold text-white/90">@{username}</div>
                     </div>
 
                     <button
                         type="button"
                         onClick={() => setOpen(true)}
-                        className="grid h-10 w-10 place-items-center rlounded-full hover:bg-white/10"
+                        className="grid h-12 w-12 place-items-center rounded-full hover:bg-white/10"
                         aria-label="Open menu"
                     >
                         <HamburgerIcon />
