@@ -6,15 +6,9 @@ const CATEGORY_MAP = {
   "sci-tech": "science,technology",
 };
 
-// simple in-memory cache (works per warm lambda instance)
+// in-memory cache (works per warm serverless instance)
+const cache = new Map(); // key -> { timestamp, data }
 const CACHE_TTL_MS = 5 * 60 * 1000;
-
-function getCache() {
-  if (!globalThis.__obelNewsCache) {
-    globalThis.__obelNewsCache = new Map(); // key -> { timestamp, data }
-  }
-  return globalThis.__obelNewsCache;
-}
 
 module.exports = async (req, res) => {
   try {
@@ -22,7 +16,6 @@ module.exports = async (req, res) => {
     const newsdataCategory = CATEGORY_MAP[uiCategory] ?? null;
 
     const cacheKey = newsdataCategory || "all";
-    const cache = getCache();
     const now = Date.now();
     const cached = cache.get(cacheKey);
 
@@ -31,13 +24,14 @@ module.exports = async (req, res) => {
       return res.status(200).json(cached.data);
     }
 
-    const apiKey = process.env.NEWSDATA_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({ error: "Missing NEWSDATA_API_KEY in Vercel env vars" });
+    if (!process.env.NEWSDATA_API_KEY) {
+      return res
+        .status(500)
+        .json({ error: "Missing NEWSDATA_API_KEY in Vercel env vars" });
     }
 
     const params = new URLSearchParams({
-      apikey: apiKey,
+      apikey: process.env.NEWSDATA_API_KEY,
       language: "en",
       country: "us",
     });
@@ -61,7 +55,8 @@ module.exports = async (req, res) => {
       url: item.link,
       imageUrl: item.image_url || null,
       publishedAt: item.pubDate || null,
-      sourceName: item.source_id || (item.creator && item.creator[0]) || "Unknown source",
+      sourceName:
+        item.source_id || (item.creator && item.creator[0]) || "Unknown source",
       categories: item.category || [],
       country: item.country || [],
       language: item.language || "en",
@@ -69,7 +64,8 @@ module.exports = async (req, res) => {
 
     const payload = {
       category: uiCategory,
-      totalResults: raw.totalResults || raw.totalResultsCount || articles.length,
+      totalResults:
+        raw.totalResults || raw.totalResultsCount || articles.length,
       articles,
     };
 
