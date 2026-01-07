@@ -1,77 +1,199 @@
-#  Obel | Finance Portfolio*
+# Obel ⚡️
+**Subtitle:** *Your Personal Command Center*
 
+Obel is a futuristic dashboard-style web app built to combine markets + portfolio tracking + news + weather + budgeting + productivity + an AI workspace assistant into one clean “command center” experience.
+
+This is a portfolio project focused on frontend engineering, polished UI/UX, modular components, and real API integration (market data powered by Twelve Data API).
+---
+
+## ✨ What Obel Does
+
+Obel is designed to feel like a daily hub you’d actually open. Instead of bouncing between apps, Obel centralizes everything into a smooth dashboard workflow.
+
+### ✅ Homepage / Demo Notice (Auth Removed)
+Obel originally included login/signup, but for the demo version it’s currently removed.
+
+**Why?** MongoDB free tier can pause after inactivity, which makes always-on authentication unreliable unless upgraded to a paid tier. Since this is a showcase build, auth was removed temporarily and can be re-enabled once backend hosting is always-on.
 
 ---
 
-## 🚀 Features
+## 🧩 Pages & Features
 
-- ⚡ **Animated, Futuristic UI** – Built with React, TailwindCSS, GSAP, and Framer Motion  
-- 🔐 **Login & Signup System** – Smooth authentication flow with form validation and animations  
+### 🏠 Dashboard (Command Center Hub)
+The Dashboard is the main entry point for daily scanning and quick actions:
+- Hero “Welcome back” section with Obel theme + motion animations
+- **Portfolio Snapshot** module (net worth + goal progress bar)
+- **Today’s To-Dos gallery** (pulled from Workspace board stored in `localStorage`)
+- Clickable **Weather tile** → opens full Weather Dashboard modal
+- Clickable **Mini Calendar widget** → opens full Calendar Planner modal
+- **Motivational Quote** widget (refreshes periodically)
+- Built with careful layout tuning so the dashboard stays readable across desktop/mobile
+
+---
+
+### 📈 Portfolio Page (Webull-Style Research)
+A dedicated page for market-focused portfolio tracking:
+- Net worth + progress tracking visuals
+- Allocation + breakdown visuals (structured to scale)
+- Designed to resemble a “trading dashboard” experience
+- Market data integration is planned/expanding using **Twelve Data API**
+
+> Goal: Keep this page clean and scannable like a real investing platform UI.
+
+---
+
+### 💸 Budgets Page (Cash Flow + Categories)
+A budgeting and spending breakdown page:
+- Budget totals + quick summary layout
+- Category cards with progress bars
+- Designed for “at-a-glance” money tracking
+- Built as a practical companion to the portfolio workflow
+
+---
+
+### 📰 News Page (Research Hub + Bookmarks)
+A category-based news feed that supports “read later” research:
+- Category pills: Political, Sports, Entertainment, Sci&Tech
+- Glassmorphism news cards (image, headline, summary, source, date)
+- **Clickable cards** open the article link in a new tab
+- Bookmark system stored in `localStorage`
+- Saved articles modal (“Bookmarks”)
+- “What is this page?” explainer modal for UX clarity
+
+---
+
+### 🗂 Workspace Page (Productivity + AI Assistant)
+The Workspace is the productivity side of Obel — built like a mini project manager:
+- Kanban-style board (To Do / In Progress / Done)
+- Task modal with structured fields (priority, due date, etc.)
+- Designed to feel like a real workflow system, not just a notes page
+- Includes an **AI Workspace Assistant** concept panel to help:
+  - break down tasks
+  - suggest next steps
+  - guide daily prioritization (built to expand over time)
+
+---
+
+## 🧭 How To Navigate Obel
+
+### Dashboard
+- Click the **Weather tile** → opens Weather Dashboard modal  
+- Click the **Calendar widget** → opens Calendar Planner modal  
+- Click a **To-Do card** → routes into Workspace context
+
+### Portfolio
+- Use it for investing-focused views and market research layout  
+- Built for fast scanning like a trading platform page
+
+### Budgets
+- Track spending categories + budget progress bars  
+- Designed as a “money management” companion tool
+
+### News
+- Switch categories with pills  
+- Click a story card to open the full article  
+- Bookmark stories to save them for later
+
+### Workspace
+- View tasks by column  
+- Create/edit tasks through the modal  
+- Use the **AI assistant panel** as a workflow helper concept
+
+---
+
+## 🗂 Key Features (Technical Details)
+
+### ✅ LocalStorage Persistence
+Obel uses localStorage to make the demo feel “real” without requiring login:
+- Workspace board → `localStorage["obel-workspace-board"]`
+- News bookmarks → `localStorage["obelNewsBookmarks"]`
+
+This makes Obel usable after refresh and helps the project feel like a real product.
+
+---
+
+### ✅ Real Data Integration (Twelve Data + APIs)
+- **Twelve Data API** is used for stock/market data integration (expanding)
+
+- **NewsData API** is used to pull fresh headlines by category for the News page
+
+- **Groq API** is used to power the built-in AI assistant experience
+
+- Weather/Quotes are fetched through backend API routes
+
+- The UI includes strong loading/error/fallback states so missing data doesn’t break the experience
+
+---
+
+## 🧱 Tech Stack
+- **React (Vite)**
+- **JavaScript**
+- **Tailwind CSS + custom CSS**
+- **Framer Motion** (animations)
+- **REST API integration**
+- **LocalStorage persistence**
+
+---
+
+## ⚠️ Challenges & Lessons Learned
+This project forced real “frontend engineering” work beyond just making things look good:
+
+- **Responsive dashboard layout fixes**
+  - especially making cards behave in landscape widths
+- **Clickable card UX**
+  - ensuring cards open links while bookmark buttons still work (event propagation)
+- **State + modal management**
+  - multiple modals, loading states, fallbacks
+- **Deployment polish**
+  - favicon/tab icon behavior differences after deployment
+- **Backend reliability**
+  - MongoDB free tier pausing → led to removing auth for demo stability
+
+---
+
+## 🚀 Roadmap (Next Up)
+- Expand Twelve Data usage for more live market widgets (quotes, mini charts, movers)
+- Persist Workspace tasks to a database (instead of only localStorage)
+- Re-enable auth once backend is always-on (paid tier / always-on hosting)
+- Add saved portfolio holdings + real performance tracking
+- Upgrade AI Workspace Assistant into a more functional workflow helper
 
 ---
 
 ## 📸 Screenshots
 
-| Home Page | 
-![Image](https://github.com/user-attachments/assets/e7f9009c-ddc6-4540-b06b-549d0a2dcf49)
+### Home 
+<img width="2527" height="1386" alt="image" src="https://github.com/user-attachments/assets/e1ae36d2-db23-4ccd-b177-6913f5ad8b6f" />
 
-| Login page |
-![Image](https://github.com/user-attachments/assets/6a76533d-189f-42c2-b96f-8aa3f0fce642)
+### Dashboard
+<img width="2543" height="1391" alt="Screenshot 2026-01-06 191829" src="https://github.com/user-attachments/assets/fa1a4e6a-da02-47d5-8178-75452d40f648" />
 
-| SignUp Page |
-![Image](https://github.com/user-attachments/assets/6aca98ce-5c6d-47c8-b948-24e11f2b825f)
+### Portfolio
+<img width="2539" height="1395" alt="Screenshot 2026-01-06 191926" src="https://github.com/user-attachments/assets/4d7cc716-efa9-438b-8a7e-c0466623263f" />
 
-| Explore page |
-![Image](https://github.com/user-attachments/assets/223bcf18-7f44-4dfe-9ae8-447762d814a5)
+### Budgets
+<img width="2540" height="1384" alt="Screenshot 2026-01-06 191957" src="https://github.com/user-attachments/assets/1c9dcf19-f8d9-4923-a094-5414eb9225f9" />
 
-| Coin Intel Page |
-![Image](https://github.com/user-attachments/assets/97db8adc-db7b-458e-bb34-cd33740b9a1b)
+### News
+<img width="2540" height="1397" alt="Screenshot 2026-01-06 192027" src="https://github.com/user-attachments/assets/183de240-f3d9-46c7-a764-a14c8a1f9f24" />
 
-**Video Link**
-https://youtu.be/UnfQlxKaa64
-
-
----
-
-## 🛠️ Built With
-
-- React.js
-- TypeScript
-- TailwindCSS
-- CSS3
+### Workspace + AI Assistant
+<img width="2534" height="1389" alt="Screenshot 2026-01-06 192939" src="https://github.com/user-attachments/assets/59178a8c-930a-492b-b35a-e5ee45431083" />
 
 ---
 
-## 🧠 Inspiration
+## 🎥 Demo Video (YouTube)
 
-Obel was born from a desire to bring clarity, strategy, and design-forward thinking to long-term stock investing. Inspired by platforms like M1 Finance and Morningstar, it reimagines portfolio management through a more immersive and visually compelling experience. The name "Obel" draws from the symbolism of obelisks—representing strength, clarity, and permanence—mirroring the platform’s mission to help investors build lasting wealth with confidence and insight.
-
-
----
-
-## 📈 Future Plans
-
-- Add AI-driven recommendation engine
+Watch the full walkthrough here: **[Obel Demo Video](https://youtu.be/2PA-9dIngD0)**
 
 ---
 
-## 🙌 Contributing
-
-Obel is an ongoing solo project, but collaboration and feedback are always welcome!  
-Feel free to fork, open issues, or suggest improvements.
-
----
-
-## 📫 Contact
-
-If you want to connect or chat about AI, Web3, or frontend development:
-
-📧 jonathan.a.mirabal@gmail.com
-🔗 [LinkedIn](https://www.linkedin.com/in/jonathanmirabal/)  
-🌐 Portfolio (https://jonathanmirabal.vercel.app/)
+## 🔗 Links
+- Website link: https://theobel.vercel.app/
+- Portfolio Website: https://jamxstudios.vercel.app/  
+- LinkedIn: https://www.linkedin.com/in/jonathanmirabal/
 
 ---
 
-## ⭐️ Show Your Support
-
-If you like this project, consider giving it a ⭐️ on GitHub. Thanks!
+## 📜 License
+Portfolio / learning project. Feel free to explore and learn from it.
