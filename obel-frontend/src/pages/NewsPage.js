@@ -248,7 +248,7 @@ const NewsPage = () => {
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter" || e.key === " ") openArticle(article.url);
                                 }}
-                                className="flex flex-col rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.55)] overflow-hidden"
+                                className="flex flex-col rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.55)] overflow-hidden cursor-pointer hover:-translate-y-1 transition"
                             >
                                 {/* image */}
                                 <div className="w-full aspect-video overflow-hidden">
