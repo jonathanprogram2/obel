@@ -126,6 +126,12 @@ const NewsPage = () => {
         }); 
     };
 
+    const openArticle = (url) => {
+        if (!url) return;
+        window.open(url, "_blank", "noopener,noreferrer");
+    };
+
+
     return (
         <div className="min-h-screen bg-[#050507] text-white pt-20 pb-10 px-6 md:px-10 max-w-6xl mx-auto">
             {/* Header */}
@@ -236,6 +242,12 @@ const NewsPage = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.35, delay: index * 0.03 }}
+                                onClick={() => openArticle(article.url)}
+                                role="link"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") openArticle(article.url);
+                                }}
                                 className="flex flex-col rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.55)] overflow-hidden"
                             >
                                 {/* image */}
@@ -284,7 +296,10 @@ const NewsPage = () => {
                                         {/* bookmark button */}
                                         <button
                                             type="button"
-                                            onClick={() => toggleBookmark(article)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleBookmark(article);
+                                            }}
                                             className={`h-8 w-8 rounded-full flex items-center justify-center border text-xs transition
                                                 ${
                                                     isBookmarked
