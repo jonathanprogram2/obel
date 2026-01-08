@@ -174,6 +174,9 @@ This project forced real “frontend engineering” work beyond just making thin
 ### Stock Detail Page
 <img width="2191" height="1365" alt="image" src="https://github.com/user-attachments/assets/961d8286-d2e1-4e9b-85ab-d35e300eb87f" />
 
+### Portfolio Pie Chart
+<img width="2527" height="1382" alt="Screenshot 2026-01-06 193110" src="https://github.com/user-attachments/assets/e2ab6c2d-7c51-4a8f-b079-005ed04e4101" />
+
 ### Budgets
 <img width="2540" height="1384" alt="Screenshot 2026-01-06 191957" src="https://github.com/user-attachments/assets/1c9dcf19-f8d9-4923-a094-5414eb9225f9" />
 
