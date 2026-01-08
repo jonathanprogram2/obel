@@ -34,8 +34,11 @@ The Dashboard is the main entry point for daily scanning and quick actions:
 ### 📈 Portfolio Page (Webull-Style Research)
 A dedicated page for market-focused portfolio tracking:
 - Net worth + progress tracking visuals
-- Allocation + breakdown visuals (structured to scale)
-- Designed to resemble a “trading dashboard” experience
+- **Interactive allocation pie chart** + breakdown visuals (structured to scale)
+- **Growth chart** to visualize portfolio performance over time
+- **Distribution chart** to highlight allocation / category spread at a glance
+- **Webull-style trading chart section** for stock performance / research
+- Designed to feel like a fast-scanning “trading dashboard” experience
 - Market data integration is planned/expanding using **Twelve Data API**
 
 > Goal: Keep this page clean and scannable like a real investing platform UI.
@@ -83,6 +86,9 @@ The Workspace is the productivity side of Obel — built like a mini project man
 
 ### Portfolio
 - Use it for investing-focused views and market research layout  
+- Check the **allocation pie chart** for portfolio breakdown  
+- Review **Growth** and **Distribution** charts for quick performance + spread insights  
+- Use the **Webull-style trading chart** section to analyze stock movement and trends  
 - Built for fast scanning like a trading platform page
 
 ### Budgets
